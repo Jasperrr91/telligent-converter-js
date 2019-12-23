@@ -46,22 +46,31 @@ fs.readFile('./input/AchievementList-Widget.xml', 'utf8', (err, data) => {
     if (err1) throw err1;
   });
 
-  const {
-    contentScript, headerScript, configuration, languageResources, additionalCssScript, files,
-  } = jsonObj.scriptedContentFragments.scriptedContentFragment;
+  const scripts = [
+    'contentScript.vm',
+    'headerScript.vm',
+    'configuration.xml',
+    'languageResources.xml',
+    'additionalCssScript.css',
+  ];
 
-  writeScriptToFile(contentScript, 'contentScript.vm');
-  writeScriptToFile(headerScript, 'headerScript.vm');
-  writeScriptToFile(configuration, 'configuration.xml');
-  writeScriptToFile(languageResources, 'languageResources.xml');
-  writeScriptToFile(additionalCssScript, 'additionalCssScript.css');
+  scripts.forEach(script => {
+    const name = script.split('.')[0];
+    const contents = jsonObj.scriptedContentFragments.scriptedContentFragment[name];
+    writeScriptToFile(contents, script);
+    jsonObj.scriptedContentFragments.scriptedContentFragment[name] = `{${script}}`;
+  });
 
+  const { files } = jsonObj.scriptedContentFragments.scriptedContentFragment;
   files.file.forEach(writeFileToFile);
+
+  jsonObj.scriptedContentFragments.scriptedContentFragment.files = '{files}';
 
   // jsonObj.scriptedContentFragments.scriptedContentFragment.__cdata = '';
   // eslint-disable-next-line new-cap
-  const parse = new jsonParser(parserOptions);
+  const parse = new jsonParser(parserOptions.json);
   const parsedXml = parse.parse(jsonObj);
+  // console.log(jsonObj.scriptedContentFragments.scriptedContentFragment);
 
   fs.writeFile('output/WidgetTemplate.xml', parsedXml, (err1) => {
     if (err1) throw err1;
