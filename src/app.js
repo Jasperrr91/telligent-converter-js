@@ -1,11 +1,8 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-console */
-
 const fs = require('fs');
 const xmlParser = require('fast-xml-parser');
 const jsonParser = require('fast-xml-parser').j2xParser;
-const he = require('he');
-// const Parser = require('fast-xml-parser').j2xParser;
 const parserOptions = require('./ParserOptions');
 
 
