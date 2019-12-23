@@ -29,52 +29,47 @@ const options = {
   stopNodes: ['parse-me-as-string'],
 };
 
-const writeXmlToFile = (xml, fileName) => {
+const writeScriptToFile = (xml, fileName) => {
   const fileContents = xml.__cdata;
-  const outputFile = [outputDir, '/contentScript.vm'].join('');
+  const outputFile = [outputDir, '/', fileName].join('');
+  
   fs.writeFile(outputFile, fileContents, (err1) => {
     if (err1) throw err1;
-    console.log('Saved!');
+  });
+};
+
+const writeFileToFile = (file) => {
+  const encodedContents = file['#text'];
+  const decodedContents = Buffer.from(encodedContents, 'base64').toString();
+  const fileName = file.attr['@_name'];
+  const outputFile = [outputDir, '/', fileName].join('');
+
+  fs.writeFile(outputFile, decodedContents, (err1) => {
+    if (err1) throw err1;
   });
 };
 
 fs.readFile('./input/AchievementList-Widget.xml', 'utf8', (err, data) => {
   const xmlData = data;
 
-  // Intermediate obj
   const tObj = parser.getTraversalObj(xmlData, options);
   const jsonObj = parser.convertToJson(tObj, options);
 
   let fragment = jsonObj.scriptedContentFragments.scriptedContentFragment;
   fragment = JSON.stringify(fragment);
-  // console.log(fragment);
-  // console.log(jsonObj)
   fs.writeFile('./output/test.json', fragment, (err1) => {
     if (err1) throw err1;
-    console.log('Saved!');
   });
 
   const { contentScript, headerScript, configuration, languageResources, additionalCssScript, files } = jsonObj.scriptedContentFragments.scriptedContentFragment;
 
-  let outputFile = '';
+  writeScriptToFile(contentScript, 'contentScript.vm');
+  writeScriptToFile(headerScript, 'headerScript.vm');
+  writeScriptToFile(configuration, 'configuration.xml');
+  writeScriptToFile(languageResources, 'languageResources.xml');
+  writeScriptToFile(additionalCssScript, 'additionalCssScript.css');
 
-  writeXmlToFile(contentScript, 'contentScript.vm');
-  writeXmlToFile(headerScript, 'headerScript.vm');
-  writeXmlToFile(configuration, 'configuration.xml');
-  writeXmlToFile(languageResources, 'languageResources.xml');
-  writeXmlToFile(additionalCssScript, 'additionalCssScript.css');
-
-  files.file.forEach((f) => {
-    const fileName = f.attr['@_name'];
-    outputFile = [outputDir, '/', fileName].join('');
-    const encodedText = f['#text'];
-    const fileContents = Buffer.from(encodedText, 'base64').toString();
-
-    fs.writeFile(outputFile, fileContents, (err1) => {
-      if (err1) throw err1;
-      console.log('Saved!');
-    });
-  });
+  files.file.forEach(writeFileToFile);
 
   // jsonObj.scriptedContentFragments.scriptedContentFragment.__cdata = '';
 
