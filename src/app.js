@@ -1,33 +1,16 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-console */
+
 const fs = require('fs');
 const parser = require('fast-xml-parser');
 const he = require('he');
+const parserOptions = require('./ParserOptions');
+
 
 const outputDir = './output';
 if (!fs.existsSync(outputDir)) {
   fs.mkdirSync(outputDir);
 }
-
-const options = {
-  attributeNamePrefix: '@_',
-  attrNodeName: 'attr', // default is 'false'
-  textNodeName: '#text',
-  ignoreAttributes: false,
-  ignoreNameSpace: false,
-  allowBooleanAttributes: false,
-  parseNodeValue: true,
-  parseAttributeValue: false,
-  trimValues: true,
-  cdataTagName: '__cdata', // default is 'false'
-  cdataPositionChar: '\\c',
-  localeRange: '', // To support non english character in tag/attribute values.
-  parseTrueNumberOnly: false,
-  arrayMode: false, // "strict"
-  attrValueProcessor: (val) => he.decode(val, { isAttributeValue: true }),
-  tagValueProcessor: (val) => he.decode(val), // default is a=>a
-  stopNodes: ['parse-me-as-string'],
-};
 
 const writeScriptToFile = (xml, fileName) => {
   const fileContents = xml.__cdata;
@@ -52,8 +35,8 @@ const writeFileToFile = (file) => {
 fs.readFile('./input/AchievementList-Widget.xml', 'utf8', (err, data) => {
   const xmlData = data;
 
-  const tObj = parser.getTraversalObj(xmlData, options);
-  const jsonObj = parser.convertToJson(tObj, options);
+  const tObj = parser.getTraversalObj(xmlData, parserOptions);
+  const jsonObj = parser.convertToJson(tObj, parserOptions);
 
   let fragment = jsonObj.scriptedContentFragments.scriptedContentFragment;
   fragment = JSON.stringify(fragment);
