@@ -62,7 +62,11 @@ fs.readFile('./input/AchievementList-Widget.xml', 'utf8', (err, data) => {
   });
 
   const { files } = jsonObj.scriptedContentFragments.scriptedContentFragment;
-  files.file.forEach(writeFileToFile);
+  try {
+    files.file.forEach(writeFileToFile);
+  } catch (e) {
+    if (e instanceof TypeError) writeFileToFile(files.file);
+  }
 
   jsonObj.scriptedContentFragments.scriptedContentFragment.files = '{files}';
 
