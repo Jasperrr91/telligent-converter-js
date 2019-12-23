@@ -70,11 +70,9 @@ fs.readFile('./input/AchievementList-Widget.xml', 'utf8', (err, data) => {
 
   jsonObj.scriptedContentFragments.scriptedContentFragment.files = '{files}';
 
-  // jsonObj.scriptedContentFragments.scriptedContentFragment.__cdata = '';
   // eslint-disable-next-line new-cap
   const parse = new jsonParser(parserOptions.json);
   const parsedXml = parse.parse(jsonObj);
-  // console.log(jsonObj.scriptedContentFragments.scriptedContentFragment);
 
   fs.writeFile('output/WidgetTemplate.xml', parsedXml, (err1) => {
     if (err1) throw err1;
