@@ -2,8 +2,10 @@
 /* eslint-disable no-console */
 
 const fs = require('fs');
-const parser = require('fast-xml-parser');
+const xmlParser = require('fast-xml-parser');
+const jsonParser = require('fast-xml-parser').j2xParser;
 const he = require('he');
+// const Parser = require('fast-xml-parser').j2xParser;
 const parserOptions = require('./ParserOptions');
 
 
@@ -35,8 +37,8 @@ const writeFileToFile = (file) => {
 fs.readFile('./input/AchievementList-Widget.xml', 'utf8', (err, data) => {
   const xmlData = data;
 
-  const tObj = parser.getTraversalObj(xmlData, parserOptions);
-  const jsonObj = parser.convertToJson(tObj, parserOptions);
+  const tObj = xmlParser.getTraversalObj(xmlData, parserOptions.xml);
+  const jsonObj = xmlParser.convertToJson(tObj, parserOptions.xml);
 
   let fragment = jsonObj.scriptedContentFragments.scriptedContentFragment;
   fragment = JSON.stringify(fragment);
@@ -57,10 +59,12 @@ fs.readFile('./input/AchievementList-Widget.xml', 'utf8', (err, data) => {
   files.file.forEach(writeFileToFile);
 
   // jsonObj.scriptedContentFragments.scriptedContentFragment.__cdata = '';
+  // eslint-disable-next-line new-cap
+  const parse = new jsonParser(parserOptions);
+  const parsedXml = parse.parse(jsonObj);
 
-  // const xml = 'empty';
-  // fs.writeFile('output/test.xml', xml, (err1) => {
-  //   if (err1) throw err1;
-  //   console.log('Saved!');
-  // });
+  fs.writeFile('output/WidgetTemplate.xml', parsedXml, (err1) => {
+    if (err1) throw err1;
+    console.log('Saved!');
+  });
 });
