@@ -22,14 +22,14 @@ module.exports = {
   },
   json: {
     attributeNamePrefix: '@_',
-    attrNodeName: '@', // default is false
+    attrNodeName: 'attr', // default is false
     textNodeName: '#text',
-    ignoreAttributes: true,
+    ignoreAttributes: false,
     cdataTagName: '__cdata', // default is false
     cdataPositionChar: '\\c',
-    format: false,
-    indentBy: '  ',
-    supressEmptyNode: false,
+    format: true,
+    indentBy: '\t',
+    supressEmptyNode: true,
     tagValueProcessor: (a) => he.encode(a, { useNamedReferences: true }), // default is a=>a
     attrValueProcessor: (a) => he.encode(a, {
       isAttributeValue: true, useNamedReferences: true,
