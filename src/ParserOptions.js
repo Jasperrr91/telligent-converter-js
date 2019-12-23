@@ -20,4 +20,19 @@ module.exports = {
     tagValueProcessor: (val) => he.decode(val), // default is a=>a
     stopNodes: ['parse-me-as-string'],
   },
+  json: {
+    attributeNamePrefix: '@_',
+    attrNodeName: '@', // default is false
+    textNodeName: '#text',
+    ignoreAttributes: true,
+    cdataTagName: '__cdata', // default is false
+    cdataPositionChar: '\\c',
+    format: false,
+    indentBy: '  ',
+    supressEmptyNode: false,
+    tagValueProcessor: (a) => he.encode(a, { useNamedReferences: true }), // default is a=>a
+    attrValueProcessor: (a) => he.encode(a, {
+      isAttributeValue: true, useNamedReferences: true,
+    }), // default is a=>a
+  },
 };
