@@ -4,6 +4,11 @@ const fs = require('fs');
 const parser = require('fast-xml-parser');
 const he = require('he');
 
+const outputDir = './output';
+if (!fs.existsSync(outputDir)) {
+  fs.mkdirSync(outputDir);
+}
+
 const options = {
   attributeNamePrefix: '@_',
   attrNodeName: 'attr', // default is 'false'
@@ -24,14 +29,17 @@ const options = {
   stopNodes: ['parse-me-as-string'],
 };
 
+const writeXmlToFile = (xml, fileName) => {
+  const fileContents = xml.__cdata;
+  const outputFile = [outputDir, '/contentScript.vm'].join('');
+  fs.writeFile(outputFile, fileContents, (err1) => {
+    if (err1) throw err1;
+    console.log('Saved!');
+  });
+};
+
 fs.readFile('./input/AchievementList-Widget.xml', 'utf8', (err, data) => {
   const xmlData = data;
-
-  const dir = './output';
-
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir);
-  }
 
   // Intermediate obj
   const tObj = parser.getTraversalObj(xmlData, options);
@@ -50,48 +58,15 @@ fs.readFile('./input/AchievementList-Widget.xml', 'utf8', (err, data) => {
 
   let outputFile = '';
 
-  const contentScriptContents = contentScript.__cdata;
-  outputFile = [dir, '/contentScript.vm'].join('');
-  fs.writeFile(outputFile, contentScriptContents, (err1) => {
-    if (err1) throw err1;
-    console.log('Saved!');
-  });
-
-  const headerScriptContents = headerScript.__cdata;
-  outputFile = [dir, '/headerScript.vm'].join('');
-  fs.writeFile(outputFile, headerScriptContents, (err1) => {
-    if (err1) throw err1;
-    console.log('Saved!');
-  });
-
-  const configurationContents = configuration.__cdata;
-  outputFile = [dir, '/configuration.vm'].join('');
-  fs.writeFile(outputFile, configurationContents, (err1) => {
-    if (err1) throw err1;
-    console.log('Saved!');
-  });
-
-  const languageResourcesContents = languageResources.__cdata;
-  outputFile = [dir, '/languageResources.vm'].join('');
-  fs.writeFile(outputFile, languageResourcesContents, (err1) => {
-    if (err1) throw err1;
-    console.log('Saved!');
-  });
-
-  const additionalCssScriptContents = additionalCssScript.__cdata;
-  outputFile = [dir, '/additionalCssScript.vm'].join('');
-  fs.writeFile(outputFile, additionalCssScriptContents, (err1) => {
-    if (err1) throw err1;
-    console.log('Saved!');
-  });
-
-  // console.log(files.file);
+  writeXmlToFile(contentScript, 'contentScript.vm');
+  writeXmlToFile(headerScript, 'headerScript.vm');
+  writeXmlToFile(configuration, 'configuration.xml');
+  writeXmlToFile(languageResources, 'languageResources.xml');
+  writeXmlToFile(additionalCssScript, 'additionalCssScript.css');
 
   files.file.forEach((f) => {
     const fileName = f.attr['@_name'];
-    outputFile = [dir, '/', fileName].join('');
-    // console.log(f['#text']);
-    // const fileContents = atob(f['#text']);
+    outputFile = [outputDir, '/', fileName].join('');
     const encodedText = f['#text'];
     const fileContents = Buffer.from(encodedText, 'base64').toString();
 
