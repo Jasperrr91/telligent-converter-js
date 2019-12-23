@@ -32,7 +32,7 @@ const options = {
 const writeScriptToFile = (xml, fileName) => {
   const fileContents = xml.__cdata;
   const outputFile = [outputDir, '/', fileName].join('');
-  
+
   fs.writeFile(outputFile, fileContents, (err1) => {
     if (err1) throw err1;
   });
@@ -61,7 +61,9 @@ fs.readFile('./input/AchievementList-Widget.xml', 'utf8', (err, data) => {
     if (err1) throw err1;
   });
 
-  const { contentScript, headerScript, configuration, languageResources, additionalCssScript, files } = jsonObj.scriptedContentFragments.scriptedContentFragment;
+  const {
+    contentScript, headerScript, configuration, languageResources, additionalCssScript, files,
+  } = jsonObj.scriptedContentFragments.scriptedContentFragment;
 
   writeScriptToFile(contentScript, 'contentScript.vm');
   writeScriptToFile(headerScript, 'headerScript.vm');
