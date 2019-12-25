@@ -6,12 +6,13 @@ const jsonParser = require('fast-xml-parser').j2xParser;
 const parserOptions = require('./ParserOptions');
 
 
-const outputDir = './output';
-if (!fs.existsSync(outputDir)) {
-  fs.mkdirSync(outputDir);
+const outputFolder = './output/';
+if (!fs.existsSync(outputFolder)) {
+  fs.mkdirSync(outputFolder);
 }
 
-const writeScriptToFile = (xml, fileName) => {
+const writeScriptToFile = (xml, fileName, outputDir) => {
+  if (xml === undefined) return;
   const fileContents = xml.__cdata;
   const outputFile = [outputDir, '/', fileName].join('');
 
@@ -20,24 +21,34 @@ const writeScriptToFile = (xml, fileName) => {
   });
 };
 
-const writeFileToFile = (file) => {
+const writeFileToFile = (file, outputDir) => {
   const encodedContents = file['#text'];
   const decodedContents = Buffer.from(encodedContents, 'base64').toString();
   const fileName = file.attr['@_name'];
-  const outputFile = [outputDir, '/', fileName].join('');
+  const outputFile = [outputDir, fileName].join('');
 
   fs.writeFile(outputFile, decodedContents, (err1) => {
     if (err1) throw err1;
   });
 };
 
-fs.readFile('./input/AchievementList-Widget.xml', 'utf8', (err, data) => {
-  const xmlData = data;
-
-  const tObj = xmlParser.getTraversalObj(xmlData, parserOptions.xml);
+const parseXmlFile = (fileName) => {
+  const fileLocation = ['./input/', fileName].join('');
+  const data = fs.readFileSync(fileLocation, 'utf8');
+  const tObj = xmlParser.getTraversalObj(data, parserOptions.xml);
   const jsonObj = xmlParser.convertToJson(tObj, parserOptions.xml);
+  return jsonObj;
+};
 
-  let fragment = jsonObj.scriptedContentFragments.scriptedContentFragment;
+const decodeXml = (xmlObject, name) => {
+  const widgetName = name.split('.')[0];
+  const widgetDir = [outputFolder, widgetName, '/'].join('');
+  if (!fs.existsSync(widgetDir)) {
+    fs.mkdirSync(widgetDir);
+  }
+
+  let xml = xmlObject;
+  let fragment = xmlObject.scriptedContentFragments.scriptedContentFragment;
   fragment = JSON.stringify(fragment);
   fs.writeFile('./output/test.json', fragment, (err1) => {
     if (err1) throw err1;
@@ -51,28 +62,38 @@ fs.readFile('./input/AchievementList-Widget.xml', 'utf8', (err, data) => {
     'additionalCssScript.css',
   ];
 
-  scripts.forEach(script => {
-    const name = script.split('.')[0];
-    const contents = jsonObj.scriptedContentFragments.scriptedContentFragment[name];
-    writeScriptToFile(contents, script);
-    jsonObj.scriptedContentFragments.scriptedContentFragment[name] = `{${script}}`;
+  scripts.forEach((script) => {
+    const scriptName = script.split('.')[0];
+    const contents = xmlObject.scriptedContentFragments.scriptedContentFragment[scriptName];
+    writeScriptToFile(contents, script, widgetDir);
+    xml.scriptedContentFragments.scriptedContentFragment[scriptName] = `{${script}}`;
   });
 
-  const { files } = jsonObj.scriptedContentFragments.scriptedContentFragment;
+  const { files } = xmlObject.scriptedContentFragments.scriptedContentFragment;
   try {
-    files.file.forEach(writeFileToFile);
+    files.file.forEach((file) => writeFileToFile(file, widgetDir));
   } catch (e) {
-    if (e instanceof TypeError) writeFileToFile(files.file);
+    if (e instanceof TypeError) writeFileToFile(files.file, widgetDir);
   }
 
-  jsonObj.scriptedContentFragments.scriptedContentFragment.files = '{files}';
+  xml.scriptedContentFragments.scriptedContentFragment.files = '{files}';
 
   // eslint-disable-next-line new-cap
   const parse = new jsonParser(parserOptions.json);
-  const parsedXml = parse.parse(jsonObj);
+  const parsedXml = parse.parse(xmlObject);
 
-  fs.writeFile('output/WidgetTemplate.xml', parsedXml, (err1) => {
+  const templateFile = [widgetDir, 'WidgetTemplate.xml'].join('');
+
+  fs.writeFile(templateFile, parsedXml, (err1) => {
     if (err1) throw err1;
-    console.log('Saved!');
+  });
+};
+
+const testFolder = './input/';
+
+fs.readdir(testFolder, (err, files) => {
+  files.forEach((file) => {
+    const xmlData = parseXmlFile(file);
+    decodeXml(xmlData, file);
   });
 });
