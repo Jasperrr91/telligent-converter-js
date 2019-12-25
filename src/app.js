@@ -47,9 +47,8 @@ const decodeXml = (xmlObject, name) => {
     fs.mkdirSync(widgetDir);
   }
 
-  let xml = xmlObject;
-  let fragment = xmlObject.scriptedContentFragments.scriptedContentFragment;
-  fragment = JSON.stringify(fragment);
+  const xml = xmlObject;
+  const fragment = JSON.stringify(xmlObject.scriptedContentFragments.scriptedContentFragment);
   fs.writeFile('./output/test.json', fragment, (err1) => {
     if (err1) throw err1;
   });
