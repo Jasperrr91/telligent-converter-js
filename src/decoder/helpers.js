@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 const fs = require('fs');
 const xmlParser = require('fast-xml-parser');
-const parserOptions = require('./../ParserOptions');
+const parserOptions = require('../ParserOptions');
 
 const writeScriptToFile = (xml, fileName, outputDir) => {
   if (xml === undefined) return;
