@@ -105,3 +105,7 @@ dist
 
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
+
+# Temporarily ignore input and output folders while working on the encoding/decoding scripts
+input
+output

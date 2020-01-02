@@ -4,9 +4,9 @@ const fs = require('fs');
 const xmlParser = require('fast-xml-parser');
 const jsonParser = require('fast-xml-parser').j2xParser;
 const parserOptions = require('./ParserOptions');
+const config = require('../config.json');
 
-
-const outputFolder = './output/';
+const { outputFolder } = config;
 if (!fs.existsSync(outputFolder)) {
   fs.mkdirSync(outputFolder);
 }
@@ -88,9 +88,9 @@ const decodeXml = (xmlObject, name) => {
   });
 };
 
-const testFolder = './input/';
+const { inputFolder } = config;
 
-fs.readdir(testFolder, (err, files) => {
+fs.readdir(inputFolder, (err, files) => {
   files.forEach((file) => {
     const xmlData = parseXmlFile(file);
     decodeXml(xmlData, file);
