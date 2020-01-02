@@ -50,11 +50,6 @@ const decodeXml = (xmlObject, name) => {
   }
 
   const xml = xmlObject;
-  const fragment = JSON.stringify(xmlObject.scriptedContentFragments.scriptedContentFragment);
-  fs.writeFile('./output/test.json', fragment, (err1) => {
-    if (err1) throw err1;
-  });
-
   const { widgetScripts } = config;
 
   widgetScripts.forEach((script) => {
