@@ -11,6 +11,7 @@ if (!fs.existsSync(outputFolder)) {
   fs.mkdirSync(outputFolder);
 }
 
+// Helper Functions
 const writeScriptToFile = (xml, fileName, outputDir) => {
   if (xml === undefined) return;
   const fileContents = xml.__cdata;
@@ -40,6 +41,7 @@ const parseXmlFile = (fileName) => {
   return jsonObj;
 };
 
+// XML Decoder
 const decodeXml = (xmlObject, name) => {
   const widgetName = name.split('.')[0];
   const widgetDir = [outputFolder, widgetName, '/'].join('');
@@ -53,15 +55,9 @@ const decodeXml = (xmlObject, name) => {
     if (err1) throw err1;
   });
 
-  const scripts = [
-    'contentScript.vm',
-    'headerScript.vm',
-    'configuration.xml',
-    'languageResources.xml',
-    'additionalCssScript.css',
-  ];
+  const { widgetScripts } = config;
 
-  scripts.forEach((script) => {
+  widgetScripts.forEach((script) => {
     const scriptName = script.split('.')[0];
     const contents = xmlObject.scriptedContentFragments.scriptedContentFragment[scriptName];
     writeScriptToFile(contents, script, widgetDir);
@@ -88,9 +84,10 @@ const decodeXml = (xmlObject, name) => {
   });
 };
 
+// Decode each widget
 const { inputFolder } = config;
-
 fs.readdir(inputFolder, (err, files) => {
+  if (err) throw err;
   files.forEach((file) => {
     const xmlData = parseXmlFile(file);
     decodeXml(xmlData, file);
