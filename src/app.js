@@ -17,8 +17,8 @@ const writeScriptToFile = (xml, fileName, outputDir) => {
   const fileContents = xml.__cdata;
   const outputFile = [outputDir, '/', fileName].join('');
 
-  fs.writeFile(outputFile, fileContents, (err1) => {
-    if (err1) throw err1;
+  fs.writeFile(outputFile, fileContents, (err) => {
+    if (err) throw err;
   });
 };
 
@@ -28,8 +28,8 @@ const writeFileToFile = (file, outputDir) => {
   const fileName = file.attr['@_name'];
   const outputFile = [outputDir, fileName].join('');
 
-  fs.writeFile(outputFile, decodedContents, (err1) => {
-    if (err1) throw err1;
+  fs.writeFile(outputFile, decodedContents, (err) => {
+    if (err) throw err;
   });
 };
 
