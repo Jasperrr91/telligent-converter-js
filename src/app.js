@@ -41,6 +41,15 @@ const parseXmlFile = (fileName) => {
   return jsonObj;
 };
 
+const decodeScript = (xml, scriptFile, dir) => {
+  const outputXml = xml;
+  const scriptName = scriptFile.split('.')[0];
+  const contents = xml.scriptedContentFragments.scriptedContentFragment[scriptName];
+  writeScriptToFile(contents, scriptFile, dir);
+  outputXml.scriptedContentFragments.scriptedContentFragment[scriptName] = `{${scriptFile}}`;
+  return outputXml;
+};
+
 // XML Decoder
 const decodeXml = (xmlObject, name) => {
   const widgetName = name.split('.')[0];
@@ -49,14 +58,11 @@ const decodeXml = (xmlObject, name) => {
     fs.mkdirSync(widgetDir);
   }
 
-  const xml = xmlObject;
+  let xml = xmlObject;
   const { widgetScripts } = config;
 
-  widgetScripts.forEach((script) => {
-    const scriptName = script.split('.')[0];
-    const contents = xmlObject.scriptedContentFragments.scriptedContentFragment[scriptName];
-    writeScriptToFile(contents, script, widgetDir);
-    xml.scriptedContentFragments.scriptedContentFragment[scriptName] = `{${script}}`;
+  widgetScripts.forEach((widgetScript) => {
+    xml = decodeScript(xml, widgetScript, widgetDir);
   });
 
   const { files } = xmlObject.scriptedContentFragments.scriptedContentFragment;
