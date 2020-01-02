@@ -80,8 +80,8 @@ const decodeXml = (xmlObject, name) => {
 
   const templateFile = [widgetDir, 'WidgetTemplate.xml'].join('');
 
-  fs.writeFile(templateFile, parsedXml, (err1) => {
-    if (err1) throw err1;
+  fs.writeFile(templateFile, parsedXml, (err) => {
+    if (err) throw err;
   });
 };
 
