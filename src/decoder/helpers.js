@@ -1,15 +1,26 @@
 /* eslint-disable no-underscore-dangle */
-const fs = require('fs');
-const xmlParser = require('fast-xml-parser');
-const jsonParser = require('fast-xml-parser').j2xParser;
-const parserOptions = require('../ParserOptions');
+import {
+  writeFile,
+  readFileSync,
+  existsSync,
+  mkdirSync,
+} from 'fs';
+import {
+  getTraversalObj,
+  convertToJson,
+  j2xParser,
+} from 'fast-xml-parser';
+import {
+  xml as xmlOptions,
+  json as jsonOptions,
+} from '../ParserOptions';
 
 export function writeScriptToFile(xml, fileName, outputDir) {
   if (xml === undefined) return;
   const fileContents = xml.__cdata;
   const outputFile = [outputDir, '/', fileName].join('');
 
-  fs.writeFile(outputFile, fileContents, (err) => {
+  writeFile(outputFile, fileContents, (err) => {
     if (err) throw err;
   });
 }
@@ -20,7 +31,7 @@ export function writeFileToFile(file, outputDir) {
   const fileName = file.attr['@_name'];
   const outputFile = [outputDir, fileName].join('');
 
-  fs.writeFile(outputFile, decodedContents, (err) => {
+  writeFile(outputFile, decodedContents, (err) => {
     if (err) throw err;
   });
 }
@@ -28,18 +39,18 @@ export function writeFileToFile(file, outputDir) {
 export function openXmlFile(filename, config) {
   const { inputFolder } = config;
   const fileLocation = [inputFolder, filename].join('');
-  return fs.readFileSync(fileLocation, 'utf8');
+  return readFileSync(fileLocation, 'utf8');
 }
 
 export function convertXmlToJson(data) {
-  const tObj = xmlParser.getTraversalObj(data, parserOptions.xml);
-  const jsonObj = xmlParser.convertToJson(tObj, parserOptions.xml);
+  const tObj = getTraversalObj(data, xmlOptions);
+  const jsonObj = convertToJson(tObj, xmlOptions);
   return jsonObj;
 }
 
 export function convertJsonToXml(data) {
   // eslint-disable-next-line new-cap
-  const parse = new jsonParser(parserOptions.json);
+  const parse = new j2xParser(jsonOptions);
   return parse.parse(data);
 }
 
@@ -77,7 +88,7 @@ export function decodeFiles(data, config, widgetDir) {
 }
 
 export function createDirIfNotExists(dir) {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir);
+  if (!existsSync(dir)) {
+    mkdirSync(dir);
   }
 }
