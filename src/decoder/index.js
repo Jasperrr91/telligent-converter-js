@@ -23,4 +23,4 @@ export default function decodeWidget(filename, config) {
   writeFile(templateFilename, xmlTemplate, (err) => {
     if (err) throw err;
   });
-};
+}
