@@ -1,12 +1,12 @@
-const fs = require('fs');
-const config = require('../config.json');
-const decoder = require('./decoder');
+import { readdir } from 'fs';
+import config from '../config.json';
+import decoder from './decoder/index';
 
 // Decode each widget
 const { inputFolder } = config;
-fs.readdir(inputFolder, (err, files) => {
+readdir(inputFolder, (err, files) => {
   if (err) throw err;
   files.forEach((file) => {
-    decoder.decodeWidget(file, config);
+    decoder(file, config);
   });
 });
