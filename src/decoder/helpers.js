@@ -90,3 +90,26 @@ export function createDirIfNotExists(dir) {
     mkdirSync(dir);
   }
 }
+
+export function getExtensionForLanguage(language) {
+  switch (language) {
+    case 'Velocity':
+      return '.vm';
+    case 'Unknown':
+      return '.txt';
+    default:
+      return '.txt';
+  }
+}
+
+export default {
+  writeScriptToFile,
+  writeFileToFile,
+  openXmlFile,
+  convertXmlToJson,
+  decodeScript,
+  decodeScripts,
+  decodeFiles,
+  createDirIfNotExists,
+  getExtensionForLanguage,
+};
