@@ -1,6 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 const fs = require('fs');
 const xmlParser = require('fast-xml-parser');
+const jsonParser = require('fast-xml-parser').j2xParser;
 const parserOptions = require('../ParserOptions');
 
 const writeScriptToFile = (xml, fileName, outputDir) => {
@@ -24,12 +25,22 @@ const writeFileToFile = (file, outputDir) => {
   });
 };
 
-const parseXmlFile = (fileName) => {
-  const fileLocation = ['./input/', fileName].join('');
-  const data = fs.readFileSync(fileLocation, 'utf8');
+const openXmlFile = (filename, config) => {
+  const { inputFolder } = config;
+  const fileLocation = [inputFolder, filename].join('');
+  return fs.readFileSync(fileLocation, 'utf8');
+};
+
+const convertXmlToJson = (data) => {
   const tObj = xmlParser.getTraversalObj(data, parserOptions.xml);
   const jsonObj = xmlParser.convertToJson(tObj, parserOptions.xml);
   return jsonObj;
+};
+
+const convertJsonToXml = (data) => {
+  // eslint-disable-next-line new-cap
+  const parse = new jsonParser(parserOptions.json);
+  return parse.parse(data);
 };
 
 const decodeScript = (xml, scriptFile, dir) => {
@@ -41,4 +52,43 @@ const decodeScript = (xml, scriptFile, dir) => {
   return outputXml;
 };
 
-module.exports = { writeFileToFile, parseXmlFile, decodeScript };
+const decodeScripts = (data, config, widgetDir) => {
+  const { widgetScripts } = config;
+  let template = data;
+
+  widgetScripts.forEach((widgetScript) => {
+    template = decodeScript(data, widgetScript, widgetDir);
+  });
+  return template;
+};
+
+const decodeFiles = (data, config, widgetDir) => {
+  const template = data;
+  const { files } = data.scriptedContentFragments.scriptedContentFragment;
+
+  try {
+    files.file.forEach((file) => writeFileToFile(file, widgetDir));
+  } catch (e) {
+    if (e instanceof TypeError) writeFileToFile(files.file, widgetDir);
+  }
+
+  template.scriptedContentFragments.scriptedContentFragment.files = '{files}';
+  return template;
+};
+
+const createDirIfNotExists = (dir) => {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir);
+  }
+};
+
+module.exports = {
+  writeFileToFile,
+  openXmlFile,
+  convertXmlToJson,
+  convertJsonToXml,
+  decodeScript,
+  decodeScripts,
+  createDirIfNotExists,
+  decodeFiles,
+};

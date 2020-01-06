@@ -1,45 +1,26 @@
 const fs = require('fs');
-const jsonParser = require('fast-xml-parser').j2xParser;
-const parserOptions = require('../ParserOptions');
 const helpers = require('./helpers');
 
-const decodeXml = (xmlObject, name, config) => {
+const decodeWidget = (filename, config) => {
+  const xmlObject = helpers.openXmlFile(filename, config);
+  const jsonObject = helpers.convertXmlToJson(xmlObject);
+
   const { outputFolder } = config;
-  if (!fs.existsSync(outputFolder)) {
-    fs.mkdirSync(outputFolder);
-  }
-
-  const widgetName = name.split('.')[0];
+  const widgetName = filename.split('.')[0];
   const widgetDir = [outputFolder, widgetName, '/'].join('');
-  if (!fs.existsSync(widgetDir)) {
-    fs.mkdirSync(widgetDir);
-  }
+  helpers.createDirIfNotExists(outputFolder);
+  helpers.createDirIfNotExists(widgetDir);
 
-  let xml = xmlObject;
-  const { widgetScripts } = config;
+  let jsonTemplate = jsonObject;
+  jsonTemplate = helpers.decodeScripts(jsonTemplate, config, widgetDir);
+  jsonTemplate = helpers.decodeFiles(jsonTemplate, config, widgetDir);
 
-  widgetScripts.forEach((widgetScript) => {
-    xml = helpers.decodeScript(xml, widgetScript, widgetDir);
-  });
+  const xmlTemplate = helpers.convertJsonToXml(jsonTemplate);
+  const templateFilename = [widgetDir, 'WidgetTemplate.xml'].join('');
 
-  const { files } = xmlObject.scriptedContentFragments.scriptedContentFragment;
-  try {
-    files.file.forEach((file) => helpers.writeFileToFile(file, widgetDir));
-  } catch (e) {
-    if (e instanceof TypeError) helpers.writeFileToFile(files.file, widgetDir);
-  }
-
-  xml.scriptedContentFragments.scriptedContentFragment.files = '{files}';
-
-  // eslint-disable-next-line new-cap
-  const parse = new jsonParser(parserOptions.json);
-  const parsedXml = parse.parse(xmlObject);
-
-  const templateFile = [widgetDir, 'WidgetTemplate.xml'].join('');
-
-  fs.writeFile(templateFile, parsedXml, (err) => {
+  fs.writeFile(templateFilename, xmlTemplate, (err) => {
     if (err) throw err;
   });
 };
 
-module.exports = { decodeXml };
+module.exports = { decodeWidget };
