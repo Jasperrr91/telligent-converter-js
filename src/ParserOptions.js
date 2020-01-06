@@ -1,7 +1,7 @@
 import he from 'he';
 
 export const xml = {
-  attributeNamePrefix: '@_',
+  attributeNamePrefix: '',
   attrNodeName: 'attr', // default is 'false'
   textNodeName: '#text',
   ignoreAttributes: false,

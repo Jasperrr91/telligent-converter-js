@@ -13,7 +13,7 @@ import {
 import {
   xml as xmlOptions,
   json as jsonOptions,
-} from '../../ParserOptions';
+} from '../ParserOptions';
 
 export function writeScriptToFile(xml, fileName, outputDir) {
   if (xml === undefined) return;
@@ -28,7 +28,7 @@ export function writeScriptToFile(xml, fileName, outputDir) {
 export function writeFileToFile(file, outputDir) {
   const encodedContents = file['#text'];
   const decodedContents = Buffer.from(encodedContents, 'base64').toString();
-  const fileName = file.attr['@_name'];
+  const fileName = file.attr['name'];
   const outputFile = [outputDir, fileName].join('');
 
   writeFile(outputFile, decodedContents, (err) => {

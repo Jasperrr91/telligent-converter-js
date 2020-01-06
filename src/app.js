@@ -12,4 +12,4 @@ readdir(inputFolder, (err, files) => {
 });
 
 // Decode Themes XML file
-themeDecoder('themes.xml', config);
+themeDecoder('../themes.xml', config);

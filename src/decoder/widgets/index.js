@@ -1,7 +1,7 @@
 import { writeFile } from 'fs';
 import {
   openXmlFile, convertXmlToJson, createDirIfNotExists, decodeScripts, decodeFiles, convertJsonToXml,
-} from './helpers';
+} from '../helpers';
 
 export default function widgetDecoder(filename, config) {
   const xmlObject = openXmlFile(filename, config);
