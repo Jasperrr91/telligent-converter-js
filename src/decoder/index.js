@@ -15,7 +15,9 @@ export default function decodeWidget(filename, config) {
 
   let jsonTemplate = jsonObject;
   jsonTemplate = decodeScripts(jsonTemplate, config, widgetDir);
-  jsonTemplate = decodeFiles(jsonTemplate, config, widgetDir);
+  if (jsonTemplate.scriptedContentFragments.scriptedContentFragment.files !== undefined) {
+    jsonTemplate = decodeFiles(jsonTemplate, config, widgetDir);
+  }
 
   const xmlTemplate = convertJsonToXml(jsonTemplate);
   const templateFilename = [widgetDir, 'WidgetTemplate.xml'].join('');
