@@ -37,8 +37,7 @@ export function writeFileToFile(file, outputDir) {
 }
 
 export function openXmlFile(filename, config) {
-  const { inputFolder } = config;
-  const fileLocation = [inputFolder, filename].join('');
+  const fileLocation = [config.inputFolder, filename].join('');
   return readFileSync(fileLocation, 'utf8');
 }
 
@@ -64,10 +63,9 @@ export function decodeScript(xml, scriptFile, dir) {
 }
 
 export function decodeScripts(data, config, widgetDir) {
-  const { widgetScripts } = config;
   let template = data;
 
-  widgetScripts.forEach((widgetScript) => {
+  config.widgetScripts.forEach((widgetScript) => {
     template = decodeScript(data, widgetScript, widgetDir);
   });
   return template;

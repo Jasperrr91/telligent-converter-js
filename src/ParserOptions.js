@@ -1,4 +1,4 @@
-const he = require('he');
+import he from 'he';
 
 export const xml = {
   attributeNamePrefix: '@_',
