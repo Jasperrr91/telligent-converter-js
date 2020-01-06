@@ -13,7 +13,7 @@ import {
 import {
   xml as xmlOptions,
   json as jsonOptions,
-} from '../ParserOptions';
+} from '../../ParserOptions';
 
 export function writeScriptToFile(xml, fileName, outputDir) {
   if (xml === undefined) return;
