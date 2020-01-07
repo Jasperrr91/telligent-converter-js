@@ -19,8 +19,16 @@ describe('Decoder helper functions work correctly', () => {
   });
 
   test('Gets the correct file extension for a giving language', () => {
-    const sampleLanguage = 'Velocity';
-    const extension = getExtensionForLanguage(sampleLanguage);
-    expect(extension).toEqual('.vm');
+    const languagesWithExtensions = {
+      Velocity: '.vm',
+      Unknown: '.txt',
+      r4nD0m: '.txt',
+    };
+
+    Object.keys(languagesWithExtensions).forEach((language) => {
+      const expectedExtension = languagesWithExtensions[language];
+      const extension = getExtensionForLanguage(language);
+      expect(extension).toEqual(expectedExtension);
+    });
   });
 });
