@@ -72,6 +72,9 @@ describe('Theme Decodes correctly', () => {
 
     const createdFile = fs.readFileSync('/sample.php', 'UTF8');
     expect(createdFile).toEqual(cdata);
+
+    const emptyData = createFileFromCData(sampleName, undefined, sampleDir);
+    expect(emptyData).toEqual(undefined);
   });
 
   test('Writes encoded preview image to file', () => {
@@ -89,5 +92,8 @@ describe('Theme Decodes correctly', () => {
     const createdImage = fs.readFileSync('/sample.png');
     const encodedCreatedImage = createdImage.toString('base64');
     expect(encodedCreatedImage).toEqual(encodedImage);
+
+    const emptyData = createPreviewImage(undefined, sampleDir);
+    expect(emptyData).toEqual(undefined);
   });
 });
