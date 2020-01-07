@@ -2,7 +2,7 @@ import fs from 'fs';
 import {
   createThemeOptionsFile,
   createScript,
-} from './index';
+} from './functions';
 
 jest.mock('fs');
 
