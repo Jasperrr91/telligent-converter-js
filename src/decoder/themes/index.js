@@ -31,7 +31,7 @@ export function createScript(name, json, themeDir) {
   const scriptFile = [scriptsDir, name, scriptExtension].join('');
   const scriptContents = json[name].__cdata;
 
-  writeFile(scriptFile, scriptContents, (err) => {
+  writeFileSync(scriptFile, scriptContents, (err) => {
     if (err) throw err;
   });
 }
@@ -61,4 +61,5 @@ export default function themeDecoder(jsonObject, config) {
 
   createScript('headScript', jsonObject, themeDir);
   createScript('bodyScript', jsonObject, themeDir);
+  // console.log(jsonObject.headScript);
 }
