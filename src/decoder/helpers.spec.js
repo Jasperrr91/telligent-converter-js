@@ -1,11 +1,12 @@
 import fs from 'fs';
 import {
   createDirIfNotExists,
+  getExtensionForLanguage,
 } from './helpers';
 
 jest.mock('fs');
 
-describe('Helpers function correctly', () => {
+describe('Decoder helper functions work correctly', () => {
   afterEach(() => {
     jest.restoreAllMocks();
   });
@@ -15,5 +16,11 @@ describe('Helpers function correctly', () => {
     createDirIfNotExists(sampleDir);
     const dirExists = fs.existsSync(sampleDir);
     expect(dirExists).toEqual(true);
+  });
+
+  test('Gets the correct file extension for a giving language', () => {
+    const sampleLanguage = 'Velocity';
+    const extension = getExtensionForLanguage(sampleLanguage);
+    expect(extension).toEqual('.vm');
   });
 });
