@@ -2,6 +2,7 @@
 import { writeFileSync } from 'fs';
 import { createDirIfNotExists, getExtensionForLanguage } from '../helpers';
 
+
 /**
  * Create an options file in the output folder of the theme, containing the attributes of the theme
  * @param {Object} themeJson Object containing the JSON of the theme
@@ -11,10 +12,7 @@ export function createThemeOptionsFile(themeJson, themeDir) {
   const outputFile = [themeDir, '/theme_options.json'].join('');
   const themeAttributes = themeJson.attr;
 
-  console.log(outputFile);
-  writeFileSync(outputFile, JSON.stringify(themeAttributes, null, 2), (err) => {
-    if (err) throw err;
-  });
+  writeFileSync(outputFile, JSON.stringify(themeAttributes, null, 2));
 }
 
 /**
@@ -31,18 +29,14 @@ export function createScript(name, json, themeDir) {
   const scriptFile = [scriptsDir, name, scriptExtension].join('');
   const scriptContents = json[name].__cdata;
 
-  writeFileSync(scriptFile, scriptContents, (err) => {
-    if (err) throw err;
-  });
+  writeFileSync(scriptFile, scriptContents);
 }
 
 export function createFileFromCData(filename, data, themeDir) {
   if (data === undefined) return;
 
   const fileLocation = [themeDir, '/', filename].join('');
-  writeFileSync(fileLocation, data.__cdata, (err) => {
-    if (err) throw err;
-  });
+  writeFileSync(fileLocation, data.__cdata);
 }
 
 export function createPreviewImage(data, themeDir) {
@@ -85,5 +79,4 @@ export default function themeDecoder(jsonObject, config) {
   createFileFromCData('palette-types.xml', jsonObject.paletteTypes, themeDir);
   createFileFromCData('language-resources.xml', jsonObject.languageResources, themeDir);
   createPreviewImage(jsonObject.previewImage, themeDir);
-  // console.log(jsonObject.headScript);
 }

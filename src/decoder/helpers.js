@@ -48,7 +48,6 @@ export function convertXmlToJson(data) {
 }
 
 export function convertJsonToXml(data) {
-  // eslint-disable-next-line new-cap
   const parse = new j2xParser(jsonOptions);
   return parse.parse(data);
 }
@@ -85,6 +84,7 @@ export function decodeFiles(data, config, widgetDir) {
   return template;
 }
 
+// TODO: Rewrite to create all dirs passed in
 export function createDirIfNotExists(dir) {
   if (!existsSync(dir)) {
     mkdirSync(dir);
@@ -107,6 +107,7 @@ export default {
   writeFileToFile,
   openXmlFile,
   convertXmlToJson,
+  convertJsonToXml,
   decodeScript,
   decodeScripts,
   decodeFiles,
