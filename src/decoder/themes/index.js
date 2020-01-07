@@ -36,6 +36,26 @@ export function createScript(name, json, themeDir) {
   });
 }
 
+export function createFileFromCData(filename, data, themeDir) {
+  if (data === undefined) return;
+
+  const fileLocation = [themeDir, '/', filename].join('');
+  writeFileSync(fileLocation, data.__cdata, (err) => {
+    if (err) throw err;
+  });
+}
+
+export function createPreviewImage(data, themeDir) {
+  if (data === undefined) return;
+
+  const filename = data.attr.name;
+  const imageData = data.__cdata;
+  const image = Buffer.from(imageData, 'base64');
+
+  const fileLocation = [themeDir, '/', filename].join('');
+  writeFileSync(fileLocation, image);
+}
+
 /**
  * Decode exported Telligent theme files
  * @param {Object} jsonObject Object containing xml of the theme parsed as json
@@ -61,5 +81,9 @@ export default function themeDecoder(jsonObject, config) {
 
   createScript('headScript', jsonObject, themeDir);
   createScript('bodyScript', jsonObject, themeDir);
+  createFileFromCData('configuration.xml', jsonObject.configuration, themeDir);
+  createFileFromCData('palette-types.xml', jsonObject.paletteTypes, themeDir);
+  createFileFromCData('language-resources.xml', jsonObject.languageResources, themeDir);
+  createPreviewImage(jsonObject.previewImage, themeDir);
   // console.log(jsonObject.headScript);
 }
