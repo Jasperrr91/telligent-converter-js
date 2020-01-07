@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { writeFile, writeFileSync } from 'fs';
+import { writeFileSync } from 'fs';
 import { createDirIfNotExists, getExtensionForLanguage } from '../helpers';
 
 /**
