@@ -6,7 +6,7 @@
   "scripts": {
     "start": "babel-node src/app.js",
     "test": "jest --coverage",
-    "test-with-coverage": "jest --coverage && cat ./coverage/lcov.info | codacy-coverage -t c7e2a659ee71492db13a1b2274bd1f7c"
+    "test-with-coverage": "jest --coverage && cat ./coverage/lcov.info | codacy-coverage"
   },
   "keywords": [],
   "author": "",
