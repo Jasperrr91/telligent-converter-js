@@ -1,5 +1,5 @@
 import { writeFileSync } from 'fs';
-import { createDirIfNotExists, getExtensionForLanguage } from '../helpers';
+import { createDirIfNotExists, getExtensionForLanguage, convertJsonToXml } from '../helpers';
 /**
  * Create an options file in the output folder of the theme, containing the attributes of the theme
  * @param {Object} themeJson Object containing the JSON of the theme
@@ -40,6 +40,14 @@ export function createFileFromCData(filename, data, themeDir) {
 
   const fileLocation = [themeDir, '/', filename].join('');
   writeFileSync(fileLocation, data.__cdata);
+}
+
+export function createXMLFileFromData(filename, data, themeDir) {
+  if (data === undefined) return;
+
+  const xml = convertJsonToXml(data);
+  const fileLocation = [themeDir, '/', filename].join('');
+  writeFileSync(fileLocation, xml);
 }
 
 /**

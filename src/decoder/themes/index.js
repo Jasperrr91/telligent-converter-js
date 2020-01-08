@@ -6,6 +6,7 @@ import {
   createStyleFiles,
   createJSFiles,
   createAssetFiles,
+  createXMLFileFromData,
 } from './functions';
 import { createDirIfNotExists } from '../helpers';
 
@@ -38,8 +39,11 @@ export default function themeDecoder(jsonObject, config) {
   createFileFromCData('palette-types.xml', jsonObject.paletteTypes, themeDir);
   createFileFromCData('language-resources.xml', jsonObject.languageResources, themeDir);
   createPreviewImage(jsonObject.previewImage, themeDir);
-  // files
   createAssetFiles(jsonObject.files, themeDir);
   createJSFiles(jsonObject.javascriptFiles, themeDir);
   createStyleFiles(jsonObject.styleFiles, themeDir);
+
+  //PageLayouts
+  //scopedProperties
+  createXMLFileFromData('scoped-properties.xml', jsonObject.scopedProperties, themeDir);
 }
