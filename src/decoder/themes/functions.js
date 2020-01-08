@@ -1,4 +1,4 @@
-import { writeFileSync } from 'fs';
+import { writeFileSync, mkdirSync } from 'fs';
 import { createDirIfNotExists, getExtensionForLanguage, convertJsonToXml } from '../helpers';
 /**
  * Create an options file in the output folder of the theme, containing the attributes of the theme
@@ -145,6 +145,34 @@ export function createAssetFiles(files, themeDir) {
   const assetFolder = [themeDir, 'assets/'].join('');
   createDirIfNotExists(assetFolder);
   files.file.forEach((file) => createAssetFile(file, assetFolder));
+}
+
+export function parseHeader(header, themeDir) {
+  if (header === undefined) return;
+  const headerFile = [themeDir, 'header.xml'].join('');
+  const xml = convertJsonToXml(header.contentFragmentHeader.regions);
+  writeFileSync(headerFile, xml);
+}
+
+export function parseFooter(footer, themeDir) {
+  if (footer === undefined) return;
+  const footerFile = [themeDir, 'footer.xml'].join('');
+  const xml = convertJsonToXml(footer.contentFragmentFooter.regions);
+  writeFileSync(footerFile, xml);
+}
+
+export function parsePage(page, outputDir) {
+  const pageFile = [outputDir, page.attr.pageName, '.xml'].join('');
+  // rewrite createXMLFileFromData()
+  const xml = convertJsonToXml(page.regions);
+  writeFileSync(pageFile, xml);
+}
+
+export function parsePages(pages, themeDir) {
+  if (pages === undefined) return;
+  const pagesDir = [themeDir, 'pages/'].join('');
+  createDirIfNotExists(pagesDir);
+  pages.contentFragmentPage.forEach((page) => parsePage(page, pagesDir));
 }
 
 export default {

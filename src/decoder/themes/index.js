@@ -7,6 +7,9 @@ import {
   createJSFiles,
   createAssetFiles,
   createXMLFileFromData,
+  parseHeader,
+  parseFooter,
+  parsePages,
 } from './functions';
 import { createDirIfNotExists } from '../helpers';
 
@@ -43,7 +46,10 @@ export default function themeDecoder(jsonObject, config) {
   createJSFiles(jsonObject.javascriptFiles, themeDir);
   createStyleFiles(jsonObject.styleFiles, themeDir);
 
+  parseHeader(jsonObject.pageLayouts.headers, themeDir);
+  parseFooter(jsonObject.pageLayouts.footers, themeDir);
+  parsePages(jsonObject.pageLayouts.pages, themeDir);
+
   //PageLayouts
-  //scopedProperties
   createXMLFileFromData('scoped-properties.xml', jsonObject.scopedProperties, themeDir);
 }
