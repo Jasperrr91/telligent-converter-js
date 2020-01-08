@@ -58,6 +58,11 @@ export function createPreviewImage(data, themeDir) {
   writeFileSync(fileLocation, image);
 }
 
+//Helper
+export function b64Decode(data) {
+  return Buffer.from(data, 'base64');
+}
+
 /**
  * Takes a single styleFile object and stores it in the styles folder
  * @param {Object} styleFile Object of the stylefile containing the name and contents
@@ -66,11 +71,9 @@ export function createPreviewImage(data, themeDir) {
 export function createStyleFile(styleFile, styleDir) {
   const filename = styleFile.attr.name;
   const attributes = styleFile.attr;
-  const content = styleFile.__cdata;
-  const decodedContent = Buffer.from(content, 'base64');
-
+  const content = b64Decode(styleFile.__cdata);
   const styleFileLocation = [styleDir, filename].join('');
-  writeFileSync(styleFileLocation, decodedContent);
+  writeFileSync(styleFileLocation, content);
 
   const attributeFileLocation = [styleFileLocation, '.json'].join('');
   writeFileSync(attributeFileLocation, attributes);
@@ -95,11 +98,9 @@ export function createStyleFiles(styleFiles, themeDir) {
  */
 export function createJSFile(jsFile, jsDir) {
   const filename = jsFile.attr.name;
-  const content = jsFile.__cdata;
-  const decodedContent = Buffer.from(content, 'base64');
-
+  const content = b64Decode(jsFile.__cdata);
   const jsFileLocation = [jsDir, filename].join('');
-  writeFileSync(jsFileLocation, decodedContent);
+  writeFileSync(jsFileLocation, content);
 }
 
 /**
