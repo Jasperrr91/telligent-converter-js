@@ -59,7 +59,7 @@ export function createPreviewImage(data, themeDir) {
 }
 
 /**
- * Takes a single styleFile object and stores it
+ * Takes a single styleFile object and stores it in the styles folder
  * @param {Object} styleFile Object of the stylefile containing the name and contents
  * @param {String} styleDir Output folder
  */
@@ -86,6 +86,32 @@ export function createStyleFiles(styleFiles, themeDir) {
   const styleFolder = [themeDir, 'styles/'].join('');
   createDirIfNotExists(styleFolder);
   styleFiles.file.forEach((file) => createStyleFile(file, styleFolder));
+}
+
+/**
+ * Takes a single javascript file object and stores it in the js folder
+ * @param {Object} styleFile Object of the stylefile containing the name and contents
+ * @param {String} styleDir Output folder
+ */
+export function createJSFile(jsFile, jsDir) {
+  const filename = jsFile.attr.name;
+  const content = jsFile.__cdata;
+  const decodedContent = Buffer.from(content, 'base64');
+
+  const jsFileLocation = [jsDir, filename].join('');
+  writeFileSync(jsFileLocation, decodedContent);
+}
+
+/**
+ * Creates a folder for the theme's javascript files and maps over these files a function to create them
+ * @param {Object} styleFiles Object containing the stylefiles for the theme
+ * @param {String} themeDir Output folder
+ */
+export function createJSFiles(javascriptFiles, themeDir) {
+  if (javascriptFiles === undefined) return;
+  const jsFolder = [themeDir, 'js/'].join('');
+  createDirIfNotExists(jsFolder);
+  javascriptFiles.file.forEach((file) => createJSFile(file, jsFolder));
 }
 
 export default {
