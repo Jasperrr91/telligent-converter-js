@@ -5,6 +5,7 @@ import {
   createPreviewImage,
   createStyleFiles,
   createJSFiles,
+  createAssetFiles,
 } from './functions';
 import { createDirIfNotExists } from '../helpers';
 
@@ -38,7 +39,7 @@ export default function themeDecoder(jsonObject, config) {
   createFileFromCData('language-resources.xml', jsonObject.languageResources, themeDir);
   createPreviewImage(jsonObject.previewImage, themeDir);
   // files
-  // javascriptFiles
+  createAssetFiles(jsonObject.files, themeDir);
   createJSFiles(jsonObject.javascriptFiles, themeDir);
   createStyleFiles(jsonObject.styleFiles, themeDir);
 }

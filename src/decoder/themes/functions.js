@@ -115,6 +115,30 @@ export function createJSFiles(javascriptFiles, themeDir) {
   javascriptFiles.file.forEach((file) => createJSFile(file, jsFolder));
 }
 
+/**
+ * Takes a single javascript file object and stores it in the js folder
+ * @param {Object} styleFile Object of the stylefile containing the name and contents
+ * @param {String} styleDir Output folder
+ */
+export function createAssetFile(file, assetDir) {
+  const filename = file.attr.name;
+  const content = b64Decode(file.__cdata);
+  const fileLocation = [assetDir, filename].join('');
+  writeFileSync(fileLocation, content);
+}
+
+/**
+ * Creates a folder for the theme's javascript files and maps over these files a function to create them
+ * @param {Object} styleFiles Object containing the stylefiles for the theme
+ * @param {String} themeDir Output folder
+ */
+export function createAssetFiles(files, themeDir) {
+  if (files === undefined) return;
+  const assetFolder = [themeDir, 'assets/'].join('');
+  createDirIfNotExists(assetFolder);
+  files.file.forEach((file) => createAssetFile(file, assetFolder));
+}
+
 export default {
   createThemeOptionsFile,
   createScript,
