@@ -28,7 +28,7 @@ export function writeScriptToFile(xml, fileName, outputDir) {
 export function writeFileToFile(file, outputDir) {
   const encodedContents = file['#text'];
   const decodedContents = Buffer.from(encodedContents, 'base64').toString();
-  const fileName = file.attr['name'];
+  const fileName = file.attr.name;
   const outputFile = [outputDir, fileName].join('');
 
   writeFile(outputFile, decodedContents, (err) => {
