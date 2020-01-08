@@ -29,6 +29,12 @@ export function createScript(name, json, themeDir) {
   writeFileSync(scriptFile, scriptContents);
 }
 
+/**
+ * For a given object, take the __cdata key and store it in a given file
+ * @param {String} filename Name of the file to be created
+ * @param {Object} data Object that contains the file data
+ * @param {String} themeDir Output folder
+ */
 export function createFileFromCData(filename, data, themeDir) {
   if (data === undefined) return;
 
@@ -36,6 +42,11 @@ export function createFileFromCData(filename, data, themeDir) {
   writeFileSync(fileLocation, data.__cdata);
 }
 
+/**
+ * Takes an object containing a base64 encoded image and stores it
+ * @param {Object} data Object containing the encoded image and it's name
+ * @param {String} themeDir Output folder
+ */
 export function createPreviewImage(data, themeDir) {
   if (data === undefined) return;
 
@@ -45,6 +56,36 @@ export function createPreviewImage(data, themeDir) {
 
   const fileLocation = [themeDir, '/', filename].join('');
   writeFileSync(fileLocation, image);
+}
+
+/**
+ * Takes a single styleFile object and stores it
+ * @param {Object} styleFile Object of the stylefile containing the name and contents
+ * @param {String} styleDir Output folder
+ */
+export function createStyleFile(styleFile, styleDir) {
+  const filename = styleFile.attr.name;
+  const attributes = styleFile.attr;
+  const content = styleFile.__cdata;
+  const decodedContent = Buffer.from(content, 'base64');
+
+  const styleFileLocation = [styleDir, filename].join('');
+  writeFileSync(styleFileLocation, decodedContent);
+
+  const attributeFileLocation = [styleFileLocation, '.json'].join('');
+  writeFileSync(attributeFileLocation, attributes);
+}
+
+/**
+ * Creates a folder for the theme's stylefiles and maps over these files a function to create them
+ * @param {Object} styleFiles Object containing the stylefiles for the theme
+ * @param {String} themeDir Output folder
+ */
+export function createStyleFiles(styleFiles, themeDir) {
+  if (styleFiles === undefined) return;
+  const styleFolder = [themeDir, 'styles/'].join('');
+  createDirIfNotExists(styleFolder);
+  styleFiles.file.forEach((file) => createStyleFile(file, styleFolder));
 }
 
 export default {
