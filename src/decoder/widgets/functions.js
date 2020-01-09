@@ -2,6 +2,7 @@
 import {
   writeFile,
 } from 'fs';
+import { convertXmlToJson } from '../helpers';
 
 export function writeScriptToFile(xml, fileName, outputDir) {
   if (xml === undefined) return;
@@ -62,6 +63,23 @@ export function decodeFiles(data, widgetDir) {
 
   template.files = '{files}';
   return template;
+}
+
+export function replaceSlashWithOR(string) {
+  return string.replace(/\//g, ' OR ');
+}
+
+export function getValueFromLanguageKey(jsonObject, key) {
+  const languageResourcesXML = jsonObject.languageResources.__cdata;
+  const languageResources = convertXmlToJson(languageResourcesXML);
+  const resourceList = languageResources.language.resource;
+
+  const re = /^\$\{resource:(.*)\}$/;
+  const keyName = re.exec(key)[1];
+
+  const matchingResource = resourceList.filter((resource) => resource.attr.name === keyName);
+  const result = matchingResource[0]['#text'];
+  return replaceSlashWithOR(result);
 }
 
 export default {

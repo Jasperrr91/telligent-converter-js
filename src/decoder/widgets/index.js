@@ -5,11 +5,14 @@ import {
 import {
   decodeScripts,
   decodeFiles,
+  getValueFromLanguageKey,
 } from './functions';
 
 export default function widgetDecoder(jsonObject, config, dir) {
   console.log(jsonObject.attr.name);
-  const widgetName = jsonObject.attr.name;
+  const widgetNameReference = jsonObject.attr.name;
+  const widgetName = getValueFromLanguageKey(jsonObject, widgetNameReference);
+  console.log(widgetName);
 
   const outputFolder = dir || config.outputFolder;
 
