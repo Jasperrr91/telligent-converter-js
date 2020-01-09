@@ -1,4 +1,4 @@
-import { writeFileSync, mkdirSync } from 'fs';
+import { writeFileSync } from 'fs';
 import { createDirIfNotExists, getExtensionForLanguage, convertJsonToXml } from '../helpers';
 /**
  * Create an options file in the output folder of the theme, containing the attributes of the theme
@@ -66,7 +66,7 @@ export function createPreviewImage(data, themeDir) {
   writeFileSync(fileLocation, image);
 }
 
-//Helper
+// Helper
 export function b64Decode(data) {
   return Buffer.from(data, 'base64');
 }
@@ -173,6 +173,22 @@ export function parsePages(pages, themeDir) {
   const pagesDir = [themeDir, 'pages/'].join('');
   createDirIfNotExists(pagesDir);
   pages.contentFragmentPage.forEach((page) => parsePage(page, pagesDir));
+}
+
+export function parseContentFragment(data, dir) {
+  // parse as widget
+}
+
+export function parseContentFragments(data, dir) {
+  if (data === undefined) return;
+  data.scriptedContentFragment.forEach((fragment) => parseContentFragment(fragment, dir));
+}
+
+export function createPageLayouts(data, themeDir) {
+  parseHeader(data.headers, themeDir);
+  parseFooter(data.footers, themeDir);
+  parsePages(data.pages, themeDir);
+  parseContentFragments(data.contentFragments.scriptedContentFragments, themeDir);
 }
 
 export default {

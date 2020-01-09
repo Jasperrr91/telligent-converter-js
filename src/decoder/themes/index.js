@@ -7,9 +7,7 @@ import {
   createJSFiles,
   createAssetFiles,
   createXMLFileFromData,
-  parseHeader,
-  parseFooter,
-  parsePages,
+  createPageLayouts,
 } from './functions';
 import { createDirIfNotExists } from '../helpers';
 
@@ -33,9 +31,7 @@ export default function themeDecoder(jsonObject, config) {
   const themeDir = [outputFolder, themeDescription, '/'].join('');
   createDirIfNotExists(themeDir);
 
-  // Save theme options
   createThemeOptionsFile(jsonObject, themeDir);
-
   createScript('headScript', jsonObject, themeDir);
   createScript('bodyScript', jsonObject, themeDir);
   createFileFromCData('configuration.xml', jsonObject.configuration, themeDir);
@@ -45,11 +41,6 @@ export default function themeDecoder(jsonObject, config) {
   createAssetFiles(jsonObject.files, themeDir);
   createJSFiles(jsonObject.javascriptFiles, themeDir);
   createStyleFiles(jsonObject.styleFiles, themeDir);
-
-  parseHeader(jsonObject.pageLayouts.headers, themeDir);
-  parseFooter(jsonObject.pageLayouts.footers, themeDir);
-  parsePages(jsonObject.pageLayouts.pages, themeDir);
-
-  //PageLayouts
+  createPageLayouts(jsonObject.pageLayouts, themeDir);
   createXMLFileFromData('scoped-properties.xml', jsonObject.scopedProperties, themeDir);
 }
