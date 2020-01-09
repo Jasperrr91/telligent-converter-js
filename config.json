@@ -1,11 +1,4 @@
 {
   "inputFolder": "./input/",
-  "outputFolder": "./output/",
-  "widgetScripts": [
-    "contentScript.vm",
-    "headerScript.vm",
-    "configuration.xml",
-    "languageResources.xml",
-    "additionalCssScript.css"
-  ]
+  "outputFolder": "./output/"
 }

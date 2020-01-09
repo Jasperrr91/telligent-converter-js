@@ -1,5 +1,6 @@
 import { writeFileSync } from 'fs';
 import { createDirIfNotExists, getExtensionForLanguage, convertJsonToXml } from '../helpers';
+import { widgetDecoder } from '../index';
 /**
  * Create an options file in the output folder of the theme, containing the attributes of the theme
  * @param {Object} themeJson Object containing the JSON of the theme
@@ -176,7 +177,8 @@ export function parsePages(pages, themeDir) {
 }
 
 export function parseContentFragment(data, dir) {
-  // parse as widget
+  const widgetsDir = [dir, 'widgets/'].join('');
+  widgetDecoder(data, {}, widgetsDir);
 }
 
 export function parseContentFragments(data, dir) {

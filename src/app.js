@@ -7,7 +7,9 @@ const { inputFolder } = config;
 readdir(inputFolder, (err, files) => {
   if (err) throw err;
   files.forEach((file) => {
-    widgetDecoder(file, config);
+    const widgetXml = helpers.openXmlFile(file, config);
+    const widgetJson = helpers.convertXmlToJson(widgetXml);
+    widgetDecoder(widgetJson.scriptedContentFragments.scriptedContentFragment, config);
   });
 });
 

@@ -1,22 +1,26 @@
 import { writeFile } from 'fs';
 import {
-  openXmlFile, convertXmlToJson, createDirIfNotExists, decodeScripts, decodeFiles, convertJsonToXml,
+  createDirIfNotExists, convertJsonToXml,
 } from '../helpers';
+import {
+  decodeScripts,
+  decodeFiles,
+} from './functions';
 
-export default function widgetDecoder(filename, config) {
-  const xmlObject = openXmlFile(filename, config);
-  const jsonObject = convertXmlToJson(xmlObject);
+export default function widgetDecoder(jsonObject, config, dir) {
+  console.log(jsonObject.attr.name);
+  const widgetName = jsonObject.attr.name;
 
-  const { outputFolder } = config;
-  const widgetName = filename.split('.')[0];
+  const outputFolder = dir || config.outputFolder;
+
   const widgetDir = [outputFolder, widgetName, '/'].join('');
   createDirIfNotExists(outputFolder);
   createDirIfNotExists(widgetDir);
 
   let jsonTemplate = jsonObject;
-  jsonTemplate = decodeScripts(jsonTemplate, config, widgetDir);
-  if (jsonTemplate.scriptedContentFragments.scriptedContentFragment.files !== undefined) {
-    jsonTemplate = decodeFiles(jsonTemplate, config, widgetDir);
+  jsonTemplate = decodeScripts(jsonTemplate, widgetDir);
+  if (jsonTemplate.files !== undefined) {
+    jsonTemplate = decodeFiles(jsonTemplate, widgetDir);
   }
 
   const xmlTemplate = convertJsonToXml(jsonTemplate);
