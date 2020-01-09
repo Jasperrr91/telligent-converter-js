@@ -24,7 +24,6 @@ export default function themeDecoder(jsonObject, config) {
   }
 
   const { outputFolder } = config;
-  createDirIfNotExists(outputFolder);
 
   // Get the description of the theme and use that as the output folder name
   const themeDescription = jsonObject.attr.description;

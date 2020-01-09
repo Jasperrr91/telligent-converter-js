@@ -14,7 +14,6 @@ export default function widgetDecoder(jsonObject, config, dir) {
 
   const outputFolder = dir || config.outputFolder;
   const widgetDir = [outputFolder, widgetName, '/'].join('');
-  createDirIfNotExists(outputFolder);
   createDirIfNotExists(widgetDir);
 
   let jsonTemplate = jsonObject;

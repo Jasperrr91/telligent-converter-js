@@ -33,7 +33,7 @@ export function convertJsonToXml(data) {
 // TODO: Rewrite to create all dirs passed in
 export function createDirIfNotExists(dir) {
   if (!existsSync(dir)) {
-    mkdirSync(dir);
+    mkdirSync(dir, { recursive: true });
   }
 }
 
