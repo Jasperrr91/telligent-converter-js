@@ -137,7 +137,7 @@ export function createAssetFile(file, assetDir) {
 }
 
 /**
- * Creates a folder for the theme's javascript files and maps over these files a function to create them
+ * Creates a folder for the theme's javascript files and maps a unction to create the files
  * @param {Object} styleFiles Object containing the stylefiles for the theme
  * @param {String} themeDir Output folder
  */
