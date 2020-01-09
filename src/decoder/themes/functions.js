@@ -51,6 +51,13 @@ export function createXMLFileFromData(filename, data, themeDir) {
   writeFileSync(fileLocation, xml);
 }
 
+export function createXMLFileFromData2(filename, data, outputDir) {
+  if (data === undefined) return;
+  const fileLocation = [outputDir, filename].join('');
+  const xml = convertJsonToXml(data);
+  writeFileSync(fileLocation, xml);
+}
+
 /**
  * Takes an object containing a base64 encoded image and stores it
  * @param {Object} data Object containing the encoded image and it's name
@@ -148,32 +155,16 @@ export function createAssetFiles(files, themeDir) {
   files.file.forEach((file) => createAssetFile(file, assetFolder));
 }
 
-export function parseHeader(header, themeDir) {
-  if (header === undefined) return;
-  const headerFile = [themeDir, 'header.xml'].join('');
-  const xml = convertJsonToXml(header.contentFragmentHeader.regions);
-  writeFileSync(headerFile, xml);
-}
-
-export function parseFooter(footer, themeDir) {
-  if (footer === undefined) return;
-  const footerFile = [themeDir, 'footer.xml'].join('');
-  const xml = convertJsonToXml(footer.contentFragmentFooter.regions);
-  writeFileSync(footerFile, xml);
-}
-
-export function parsePage(page, outputDir) {
-  const pageFile = [outputDir, page.attr.pageName, '.xml'].join('');
-  // rewrite createXMLFileFromData()
-  const xml = convertJsonToXml(page.regions);
-  writeFileSync(pageFile, xml);
-}
-
 export function parsePages(pages, themeDir) {
   if (pages === undefined) return;
   const pagesDir = [themeDir, 'pages/'].join('');
   createDirIfNotExists(pagesDir);
-  pages.contentFragmentPage.forEach((page) => parsePage(page, pagesDir));
+
+  pages.contentFragmentPage.forEach((page) => {
+    const fileName = [page.attr.pageName, '.xml'].join('');
+    const data = page.regions;
+    createXMLFileFromData2(fileName, data, pagesDir);
+  });
 }
 
 export function parseContentFragment(data, dir) {
@@ -187,8 +178,8 @@ export function parseContentFragments(data, dir) {
 }
 
 export function createPageLayouts(data, themeDir) {
-  parseHeader(data.headers, themeDir);
-  parseFooter(data.footers, themeDir);
+  createXMLFileFromData2('header.xml', data.headers.contentFragmentHeader.regions, themeDir);
+  createXMLFileFromData2('footer.xml', data.footers.contentFragmentFooter.regions, themeDir);
   parsePages(data.pages, themeDir);
   parseContentFragments(data.contentFragments.scriptedContentFragments, themeDir);
 }
