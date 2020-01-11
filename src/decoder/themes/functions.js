@@ -43,15 +43,7 @@ export function createFileFromCData(filename, data, themeDir) {
   writeFileSync(fileLocation, data.__cdata);
 }
 
-export function createXMLFileFromData(filename, data, themeDir) {
-  if (data === undefined) return;
-
-  const xml = convertJsonToXml(data);
-  const fileLocation = [themeDir, '/', filename].join('');
-  writeFileSync(fileLocation, xml);
-}
-
-export function createXMLFileFromData2(filename, data, outputDir) {
+export function createXMLFileFromData(filename, data, outputDir) {
   if (data === undefined) return;
   const fileLocation = [outputDir, filename].join('');
   const xml = convertJsonToXml(data);
@@ -163,7 +155,7 @@ export function parsePages(pages, themeDir) {
   pages.contentFragmentPage.forEach((page) => {
     const fileName = [page.attr.pageName, '.xml'].join('');
     const data = page.regions;
-    createXMLFileFromData2(fileName, data, pagesDir);
+    createXMLFileFromData(fileName, data, pagesDir);
   });
 }
 
@@ -178,8 +170,8 @@ export function parseContentFragments(data, dir) {
 }
 
 export function createPageLayouts(data, themeDir) {
-  createXMLFileFromData2('header.xml', data.headers.contentFragmentHeader.regions, themeDir);
-  createXMLFileFromData2('footer.xml', data.footers.contentFragmentFooter.regions, themeDir);
+  createXMLFileFromData('header.xml', data.headers.contentFragmentHeader.regions, themeDir);
+  createXMLFileFromData('footer.xml', data.footers.contentFragmentFooter.regions, themeDir);
   parsePages(data.pages, themeDir);
   parseContentFragments(data.contentFragments.scriptedContentFragments, themeDir);
 }
