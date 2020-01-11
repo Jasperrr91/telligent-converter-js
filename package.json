@@ -11,6 +11,10 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Jasperrr91/telligent-converter-js"
+  },
   "dependencies": {
     "codacy-coverage": "^3.4.0",
     "fast-xml-parser": "^3.15.1",
