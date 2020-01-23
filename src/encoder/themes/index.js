@@ -2,15 +2,8 @@
 // import { readdir } from 'fs';
 import fs from 'fs';
 import functions from './functions';
-import { createXMLFileFromData } from '../../decoder/themes/functions';
-import { createDirIfNotExists } from '../../decoder/helpers';
 
 export function encodeTheme(themeFolder) {
-  // const themeOptionsFile = [inputFolder, '/theme_options.json'].join('');
-  // const rawthemeOptions = fs.readFileSync(themeOptionsFile);
-  // const themeOptions = JSON.parse(rawthemeOptions);
-  // console.log(themeOptions);
-
   const themeOptions = functions.getThemeOptions(themeFolder);
 
   const headScriptFile = [themeFolder, '/scripts/headScript.vm'].join('');
@@ -37,7 +30,6 @@ export function encodeTheme(themeFolder) {
   const styleFiles = functions.getStyleFiles(themeFolder);
 
   const pageLayouts = functions.getPageLayouts(themeFolder);
-  // console.log(styleFiles);
 
   const jsonObject = {
     theme: {
@@ -55,28 +47,28 @@ export function encodeTheme(themeFolder) {
     },
   };
 
-  createDirIfNotExists('./encoded');
-  createXMLFileFromData('theme.xml', jsonObject, './encoded/');
+  return jsonObject;
 }
 
 export default function themeEncoder(inputFolder) {
-  // <themes>
-  // const template = {
-  //   themes: [],
-  // };
+  // Some Theme XML files consist of a single theme
+  // Some consist of multiple themes
+  const themes = [];
 
-  // Loop through folders
-  // Look for theme options
-  // Get name from theme options
-  // New <theme>
   fs.readdir(inputFolder, (err, folders) => {
     if (err) throw err;
     folders.forEach((folder) => {
       const themeOptions = [inputFolder, folder, '/theme_options.json'].join('');
       if (fs.existsSync(themeOptions)) {
         const themeFolder = [inputFolder, folder].join('');
-        encodeTheme(themeFolder);
+        themes.push(encodeTheme(themeFolder));
       }
     });
   });
+
+  const themesObject = {
+    themes,
+  };
+
+  return themesObject;
 }

@@ -26,7 +26,9 @@ themeDecoder(themesJson, config);
 
 // Encodes themes
 const themesFolder = './output/';
-themeEncoder(themesFolder);
+const themes = themeEncoder(themesFolder);
+createDirIfNotExists('./encoded');
+createXMLFileFromData('theme.xml', themes, './encoded/');
 
 const folderWithWidgets = './output/';
 fs.readdir(folderWithWidgets, (err, folders) => {
