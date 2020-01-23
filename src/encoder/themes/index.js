@@ -1,6 +1,6 @@
+/* eslint-disable import/no-named-as-default-member */
 // import { readdir } from 'fs';
 import fs from 'fs';
-import helpers from '../../decoder';
 import functions from './functions';
 import { createXMLFileFromData } from '../../decoder/themes/functions';
 import { createDirIfNotExists } from '../../decoder/helpers';

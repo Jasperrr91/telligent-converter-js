@@ -1,6 +1,5 @@
-import { writeFile } from 'fs';
 import {
-  createDirIfNotExists, convertJsonToXml,
+  createDirIfNotExists,
 } from '../helpers';
 import {
   decodeScripts,

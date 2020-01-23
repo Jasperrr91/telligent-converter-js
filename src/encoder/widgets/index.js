@@ -1,11 +1,10 @@
+/* eslint-disable import/no-named-as-default-member */
 import fs from 'fs';
 import functions from './functions';
 
 export default function widgetEncoder(inputFolder) {
   const widgetOptionsFile = [inputFolder, '/widget_options.json'].join('');
   if (!(fs.existsSync(widgetOptionsFile))) return false;
-
-  const widgetName = inputFolder.split('/').pop();
 
   const widgetOptions = fs.readFileSync(widgetOptionsFile, 'utf8');
   const widgetOptionsJson = JSON.parse(widgetOptions);
