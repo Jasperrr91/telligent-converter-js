@@ -46,25 +46,31 @@ export function encodeTheme(themeFolder) {
   };
 }
 
-export default function themeEncoder(inputFolder) {
+/**
+ * Either encodes a dir containing a theme into a XML file or encodes a dir containing
+ * multiple dirs with a theme into a XML file
+ * @param {String} themeDir the dir containing the theme, or the themefolders if multiple
+ */
+export default function themeEncoder(themeDir) {
   // Some Theme XML files consist of a single theme
   // Some consist of multiple themes
+  const themeOptionsFile = [themeDir, '/theme_options.json'].join('');
+  if (fs.existsSync(themeOptionsFile)) {
+    return encodeTheme(themeDir);
+  }
+
   const themes = [];
+  const subDirectories = fs.readdirSync(themeDir);
 
-  fs.readdir(inputFolder, (err, folders) => {
-    if (err) throw err;
-    folders.forEach((folder) => {
-      const themeOptions = [inputFolder, folder, '/theme_options.json'].join('');
-      if (fs.existsSync(themeOptions)) {
-        const themeFolder = [inputFolder, folder].join('');
-        themes.push(encodeTheme(themeFolder));
-      }
-    });
-  });
+  subDirectories.forEach((subDir) => {
+    const pathToSubDir = [themeDir, subDir].join('');
+    const themeOptionsFile = [pathToSubDir, '/theme_options.json'].join('');
+    if (fs.existsSync(themeOptionsFile)) {
+      themes.push(encodeTheme(pathToSubDir));
+    }
+  })
 
-  const themesObject = {
+  return {
     themes,
   };
-
-  return themesObject;
 }
