@@ -68,11 +68,11 @@ export default function themeEncoder(themeDir) {
 
   subDirectories.forEach((subDir) => {
     const pathToSubDir = [themeDir, subDir].join('');
-    const themeOptionsFile = [pathToSubDir, '/theme_options.json'].join('');
-    if (fs.existsSync(themeOptionsFile)) {
+    const themeOptionsFile2 = [pathToSubDir, '/theme_options.json'].join('');
+    if (fs.existsSync(themeOptionsFile2)) {
       themes.push(encodeTheme(pathToSubDir));
     }
-  })
+  });
 
   return {
     themes,
