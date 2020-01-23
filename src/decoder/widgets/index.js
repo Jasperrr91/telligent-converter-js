@@ -19,16 +19,8 @@ export default function widgetDecoder(jsonObject, config, dir) {
 
   createWidgetOptionsFile(jsonObject, widgetDir);
 
-  let jsonTemplate = jsonObject;
-  jsonTemplate = decodeScripts(jsonTemplate, widgetDir);
-  if (jsonTemplate.files !== undefined) {
-    jsonTemplate = decodeFiles(jsonTemplate, widgetDir);
+  decodeScripts(jsonObject, widgetDir);
+  if (jsonObject.files !== undefined) {
+    decodeFiles(jsonObject, widgetDir);
   }
-
-  const xmlTemplate = convertJsonToXml(jsonTemplate);
-  const templateFilename = [widgetDir, 'WidgetTemplate.xml'].join('');
-
-  writeFile(templateFilename, xmlTemplate, (err) => {
-    if (err) throw err;
-  });
 }

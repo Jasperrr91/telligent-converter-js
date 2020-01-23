@@ -30,18 +30,13 @@ export function writeFileToFile(file, outputDir) {
 }
 
 export function decodeScript(xml, scriptFile, dir) {
-  const outputXml = xml;
   const scriptName = scriptFile.split('.')[0];
   const contents = xml[scriptName];
   if (contents === undefined) return false;
   if (contents.__cdata !== undefined) writeScriptToFile(contents, scriptFile, dir);
-  outputXml[scriptName] = `{${scriptFile}}`;
-  return outputXml;
 }
 
 export function decodeScripts(data, widgetDir) {
-  let template = data;
-
   const widgetScripts = [
     'contentScript.vm',
     'headerScript.vm',
@@ -51,13 +46,11 @@ export function decodeScripts(data, widgetDir) {
   ];
 
   widgetScripts.forEach((widgetScript) => {
-    template = decodeScript(data, widgetScript, widgetDir);
+    decodeScript(data, widgetScript, widgetDir);
   });
-  return template;
 }
 
 export function decodeFiles(data, widgetDir) {
-  const template = data;
   const { files } = data;
 
   try {
@@ -65,9 +58,6 @@ export function decodeFiles(data, widgetDir) {
   } catch (e) {
     if (e instanceof TypeError) writeFileToFile(files.file, widgetDir);
   }
-
-  template.files = '{files}';
-  return template;
 }
 
 export function replaceSlashWithOR(string) {
