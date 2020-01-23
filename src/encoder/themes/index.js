@@ -47,8 +47,8 @@ export function encodeTheme(themeFolder) {
 }
 
 /**
- * Either encodes a dir containing a theme into a XML file or encodes a dir containing
- * multiple dirs with a theme into a XML file
+ * Encodes either a dir containing a single theme into a single object
+ * or a dir containing multiple dirs with themes, into a single object
  * @param {String} themeDir the dir containing the theme, or the themefolders if multiple
  */
 export default function themeEncoder(themeDir) {
