@@ -1,37 +1,35 @@
-/* eslint-disable import/no-named-as-default-member */
-// import { readdir } from 'fs';
 import fs from 'fs';
-import functions from './functions';
+import {
+  getThemeOptions,
+  getScript,
+  getXMLFile,
+  getPreviewImage,
+  getEncodedFiles,
+  getJSFiles,
+  getStyleFiles,
+  getPageLayouts,
+} from './functions';
 
 export function encodeTheme(themeFolder) {
-  const themeOptions = functions.getThemeOptions(themeFolder);
-
   const headScriptFile = [themeFolder, '/scripts/headScript.vm'].join('');
-  const headScript = functions.getScript(headScriptFile);
-
   const bodyScriptFile = [themeFolder, '/scripts/bodyScript.vm'].join('');
-  const bodyScript = functions.getScript(bodyScriptFile);
-
   const configurationFile = [themeFolder, '/configuration.xml'].join('');
-  const configuration = functions.getXMLFile(configurationFile);
-
   const paletteTypesFile = [themeFolder, '/palette-types.xml'].join('');
-  const paletteTypes = functions.getXMLFile(paletteTypesFile);
-
   const languageResourcesFile = [themeFolder, '/language-resources.xml'].join('');
-  const languageResources = functions.getXMLFile(languageResourcesFile);
 
-  const previewImage = functions.getPreviewImage(themeFolder);
+  const themeOptions = getThemeOptions(themeFolder);
+  const headScript = getScript(headScriptFile);
+  const bodyScript = getScript(bodyScriptFile);
+  const configuration = getXMLFile(configurationFile);
+  const paletteTypes = getXMLFile(paletteTypesFile);
+  const languageResources = getXMLFile(languageResourcesFile);
+  const previewImage = getPreviewImage(themeFolder);
+  const files = getEncodedFiles(themeFolder);
+  const javascriptFiles = getJSFiles(themeFolder);
+  const styleFiles = getStyleFiles(themeFolder);
+  const pageLayouts = getPageLayouts(themeFolder);
 
-  const files = functions.getEncodedFiles(themeFolder);
-
-  const javascriptFiles = functions.getJSFiles(themeFolder);
-
-  const styleFiles = functions.getStyleFiles(themeFolder);
-
-  const pageLayouts = functions.getPageLayouts(themeFolder);
-
-  const jsonObject = {
+  return {
     theme: {
       attr: themeOptions,
       headScript,
@@ -46,8 +44,6 @@ export function encodeTheme(themeFolder) {
       pageLayouts,
     },
   };
-
-  return jsonObject;
 }
 
 export default function themeEncoder(inputFolder) {

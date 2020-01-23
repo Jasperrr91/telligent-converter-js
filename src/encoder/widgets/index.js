@@ -1,31 +1,32 @@
-/* eslint-disable import/no-named-as-default-member */
 import fs from 'fs';
-import functions from './functions';
+import {
+  getVelocityScript,
+  getXMLFile,
+  getAssetFiles,
+} from './functions';
 
 export default function widgetEncoder(inputFolder) {
+  // Validate that specified folder contains a telligent widget
   const widgetOptionsFile = [inputFolder, '/widget_options.json'].join('');
-  if (!(fs.existsSync(widgetOptionsFile))) return false;
+  if (!(fs.existsSync(widgetOptionsFile))) return undefined;
 
   const widgetOptions = fs.readFileSync(widgetOptionsFile, 'utf8');
   const widgetOptionsJson = JSON.parse(widgetOptions);
 
   const contentScriptFile = [inputFolder, '/contentScript.vm'].join('');
-  const contentScript = functions.getScript(contentScriptFile);
   const headerScriptFile = [inputFolder, '/headerScript.vm'].join('');
-  const headerScript = functions.getScript(headerScriptFile);
-
   const configurationFile = [inputFolder, '/configuration.xml'].join('');
-  const configuration = functions.getXML(configurationFile);
-
   const languageResourcesFile = [inputFolder, '/languageResources.xml'].join('');
-  const languageResources = functions.getXML(languageResourcesFile);
-
   const additionalCssScriptFile = [inputFolder, '/additionalCssScript.css'].join('');
-  const additionalCssScript = functions.getScript(additionalCssScriptFile);
 
-  const files = functions.getFiles(inputFolder);
+  const contentScript = getVelocityScript(contentScriptFile);
+  const headerScript = getVelocityScript(headerScriptFile);
+  const configuration = getXMLFile(configurationFile);
+  const languageResources = getXMLFile(languageResourcesFile);
+  const additionalCssScript = getVelocityScript(additionalCssScriptFile);
+  const files = getAssetFiles(inputFolder);
 
-  const jsonObject = {
+  return {
     scriptedContentFragments: {
       scriptedContentFragment: {
         attr: widgetOptionsJson,
@@ -38,6 +39,4 @@ export default function widgetEncoder(inputFolder) {
       },
     },
   };
-
-  return jsonObject;
 }
