@@ -30,7 +30,7 @@ export function getVelocityScript(fileLocation) {
  */
 export function getXMLFile(fileLocation) {
   // Validates if the needed files do exist
-  if (!fs.existsSync(fileLocation)) throw new Error('The Widget XML file does not exist');
+  if (!fs.existsSync(fileLocation)) return false;
 
   const xml = fs.readFileSync(fileLocation, 'utf8');
   return {
@@ -55,7 +55,6 @@ export function getEncodedFile(fileLocation, fileName) {
     '#text': encodedFileContents,
   };
 }
-
 /**
  * Looks for all the asset files in a widget directory, then encodes them and returns
  * them surrounded by file tags in an object.

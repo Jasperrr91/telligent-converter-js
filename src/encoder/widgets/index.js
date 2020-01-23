@@ -5,38 +5,44 @@ import {
   getAssetFiles,
 } from './functions';
 
-export default function widgetEncoder(inputFolder) {
+/**
+ * Transforms a directory containing a widget and it's files, into a single XML file
+ * @param {String} widgetDir the path to a dir containing a widget
+ */
+export default function widgetEncoder(widgetDir) {
   // Validate that specified folder contains a telligent widget
-  const widgetOptionsFile = [inputFolder, '/widget_options.json'].join('');
+  const widgetOptionsFile = [widgetDir, '/widget_options.json'].join('');
   if (!(fs.existsSync(widgetOptionsFile))) return undefined;
+
+  const scriptedContentFragment = {}
 
   const widgetOptions = fs.readFileSync(widgetOptionsFile, 'utf8');
   const widgetOptionsJson = JSON.parse(widgetOptions);
+  scriptedContentFragment.attr = widgetOptionsJson;
 
-  const contentScriptFile = [inputFolder, '/contentScript.vm'].join('');
-  const headerScriptFile = [inputFolder, '/headerScript.vm'].join('');
-  const configurationFile = [inputFolder, '/configuration.xml'].join('');
-  const languageResourcesFile = [inputFolder, '/languageResources.xml'].join('');
-  const additionalCssScriptFile = [inputFolder, '/additionalCssScript.css'].join('');
+  const contentScriptFile = [widgetDir, '/contentScript.vm'].join('');
+  const headerScriptFile = [widgetDir, '/headerScript.vm'].join('');
+  const configurationFile = [widgetDir, '/configuration.xml'].join('');
+  const languageResourcesFile = [widgetDir, '/languageResources.xml'].join('');
+  const additionalCssScriptFile = [widgetDir, '/additionalCssScript.css'].join('');
 
   const contentScript = getVelocityScript(contentScriptFile);
   const headerScript = getVelocityScript(headerScriptFile);
   const configuration = getXMLFile(configurationFile);
   const languageResources = getXMLFile(languageResourcesFile);
   const additionalCssScript = getVelocityScript(additionalCssScriptFile);
-  const files = getAssetFiles(inputFolder);
+  const files = getAssetFiles(widgetDir);
+
+  scriptedContentFragment.contentScript = contentScript;
+  scriptedContentFragment.headerScript = headerScript;
+  if (configuration) scriptedContentFragment.configuration = configuration;
+  if (languageResources) scriptedContentFragment.languageResources = languageResources;
+  scriptedContentFragment.additionalCssScript = additionalCssScript;
+  scriptedContentFragment.files = files;
 
   return {
     scriptedContentFragments: {
-      scriptedContentFragment: {
-        attr: widgetOptionsJson,
-        contentScript,
-        headerScript,
-        configuration,
-        languageResources,
-        additionalCssScript,
-        files,
-      },
+      scriptedContentFragment,
     },
   };
 }
