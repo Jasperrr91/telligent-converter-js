@@ -4,7 +4,7 @@ import { widgetDecoder, themeDecoder, helpers } from './decoder/index';
 import { widgetEncoder, themeEncoder } from './encoder/index';
 import { createXMLFileFromData } from './decoder/themes/functions';
 import {
-  createDirIfNotExists
+  createDirIfNotExists,
 } from './decoder/helpers';
 
 // Decode each widget

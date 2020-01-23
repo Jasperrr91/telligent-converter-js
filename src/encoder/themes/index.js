@@ -61,9 +61,9 @@ export function encodeTheme(themeFolder) {
 
 export default function themeEncoder(inputFolder) {
   // <themes>
-  const template = {
-    themes: [],
-  };
+  // const template = {
+  //   themes: [],
+  // };
 
   // Loop through folders
   // Look for theme options

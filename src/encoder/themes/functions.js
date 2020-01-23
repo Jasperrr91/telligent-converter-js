@@ -47,7 +47,7 @@ export function getPreviewImage(inputFolder) {
         const imageFileLoc = [inputFolder, '/', file].join('');
         image = readPreviewImage(imageFileLoc);
         imageFile = file;
-      };
+      }
     }
   });
 
