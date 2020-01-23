@@ -28,6 +28,8 @@ export default function themeDecoder(jsonObject, config) {
   // Get the description of the theme and use that as the output folder name
   const themeDescription = jsonObject.attr.description;
   const themeDir = [outputFolder, themeDescription, '/'].join('');
+
+  // console.log(jsonObject.configuration);
   createDirIfNotExists(themeDir);
 
   createThemeOptionsFile(jsonObject, themeDir);

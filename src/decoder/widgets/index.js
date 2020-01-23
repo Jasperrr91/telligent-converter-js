@@ -6,6 +6,7 @@ import {
   decodeScripts,
   decodeFiles,
   getValueFromLanguageKey,
+  createWidgetOptionsFile,
 } from './functions';
 
 export default function widgetDecoder(jsonObject, config, dir) {
@@ -15,6 +16,8 @@ export default function widgetDecoder(jsonObject, config, dir) {
   const outputFolder = dir || config.outputFolder;
   const widgetDir = [outputFolder, widgetName, '/'].join('');
   createDirIfNotExists(widgetDir);
+
+  createWidgetOptionsFile(jsonObject, widgetDir);
 
   let jsonTemplate = jsonObject;
   jsonTemplate = decodeScripts(jsonTemplate, widgetDir);

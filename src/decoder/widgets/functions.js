@@ -1,17 +1,23 @@
 /* eslint-disable no-underscore-dangle */
 import {
-  writeFile,
+  writeFileSync,
 } from 'fs';
 import { convertXmlToJson } from '../helpers';
+
+export function createWidgetOptionsFile(widgetJson, widgetDir) {
+  const outputFile = [widgetDir, '/widget_options.json'].join('');
+  const themeAttributes = widgetJson.attr;
+
+  writeFileSync(outputFile, JSON.stringify(themeAttributes, null, 2));
+}
+
 
 export function writeScriptToFile(xml, fileName, outputDir) {
   if (xml === undefined) return;
   const fileContents = xml.__cdata;
   const outputFile = [outputDir, '/', fileName].join('');
 
-  writeFile(outputFile, fileContents, (err) => {
-    if (err) throw err;
-  });
+  writeFileSync(outputFile, fileContents);
 }
 
 export function writeFileToFile(file, outputDir) {
@@ -20,16 +26,15 @@ export function writeFileToFile(file, outputDir) {
   const fileName = file.attr.name;
   const outputFile = [outputDir, fileName].join('');
 
-  writeFile(outputFile, decodedContents, (err) => {
-    if (err) throw err;
-  });
+  writeFileSync(outputFile, decodedContents);
 }
 
 export function decodeScript(xml, scriptFile, dir) {
   const outputXml = xml;
   const scriptName = scriptFile.split('.')[0];
   const contents = xml[scriptName];
-  writeScriptToFile(contents, scriptFile, dir);
+  if (contents === undefined) return false;
+  if (contents.__cdata !== undefined) writeScriptToFile(contents, scriptFile, dir);
   outputXml[scriptName] = `{${scriptFile}}`;
   return outputXml;
 }
@@ -83,6 +88,7 @@ export function getValueFromLanguageKey(jsonObject, key) {
 }
 
 export default {
+  createWidgetOptionsFile,
   writeScriptToFile,
   writeFileToFile,
   decodeScript,

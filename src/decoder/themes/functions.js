@@ -78,7 +78,7 @@ export function b64Decode(data) {
  */
 export function createStyleFile(styleFile, styleDir) {
   const filename = styleFile.attr.name;
-  const attributes = styleFile.attr;
+  const attributes = JSON.stringify(styleFile.attr);
   const content = b64Decode(styleFile.__cdata);
   const styleFileLocation = [styleDir, filename].join('');
   writeFileSync(styleFileLocation, content);
@@ -154,7 +154,9 @@ export function parsePages(pages, themeDir) {
 
   pages.contentFragmentPage.forEach((page) => {
     const fileName = [page.attr.pageName, '.xml'].join('');
-    const data = page.regions;
+    const data = {
+      contentFragmentPage: page,
+    };
     createXMLFileFromData(fileName, data, pagesDir);
   });
 }
@@ -170,8 +172,8 @@ export function parseContentFragments(data, dir) {
 }
 
 export function createPageLayouts(data, themeDir) {
-  createXMLFileFromData('header.xml', data.headers.contentFragmentHeader.regions, themeDir);
-  createXMLFileFromData('footer.xml', data.footers.contentFragmentFooter.regions, themeDir);
+  createXMLFileFromData('header.xml', data.headers, themeDir);
+  createXMLFileFromData('footer.xml', data.footers, themeDir);
   parsePages(data.pages, themeDir);
   parseContentFragments(data.contentFragments.scriptedContentFragments, themeDir);
 }
