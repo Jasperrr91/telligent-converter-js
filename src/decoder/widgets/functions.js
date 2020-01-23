@@ -32,7 +32,7 @@ export function writeFileToFile(file, outputDir) {
 export function decodeScript(xml, scriptFile, dir) {
   const scriptName = scriptFile.split('.')[0];
   const contents = xml[scriptName];
-  if (contents === undefined) return false;
+  if (contents === undefined) return;
   if (contents.__cdata !== undefined) writeScriptToFile(contents, scriptFile, dir);
 }
 
