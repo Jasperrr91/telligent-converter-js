@@ -29,20 +29,24 @@ export function encodeTheme(themeFolder) {
   const styleFiles = getStyleFiles(themeFolder);
   const pageLayouts = getPageLayouts(themeFolder);
 
+  const theme = {
+    attr: themeOptions,
+  };
+
+  if (headScript) theme.headScript = headScript;
+  if (bodyScript) theme.bodyScript = bodyScript;
+  if (configuration) theme.configuration = configuration;
+  if (paletteTypes) theme.paletteTypes = paletteTypes;
+  if (languageResources) theme.languageResources = languageResources;
+  if (previewImage) theme.previewImage = previewImage;
+  if (files) theme.files = files;
+  if (javascriptFiles) theme.javascriptFiles = javascriptFiles;
+  if (styleFiles) theme.styleFiles = styleFiles;
+  if (pageLayouts) theme.pageLayouts = pageLayouts;
+  if (headScript) theme.headScript = headScript;
+
   return {
-    theme: {
-      attr: themeOptions,
-      headScript,
-      bodyScript,
-      configuration,
-      paletteTypes,
-      languageResources,
-      previewImage,
-      files,
-      javascriptFiles,
-      styleFiles,
-      pageLayouts,
-    },
+    theme,
   };
 }
 
