@@ -6,7 +6,7 @@
   "scripts": {
     "start": "babel-node src/app.js",
     "build": "babel src -s -d dist",
-    "publish": "npm run-script build && np",
+    "release": "npm run-script build && np",
     "clean": "rm -rf ./dist/",
     "test": "jest",
     "test-with-coverage": "jest --coverage && cat ./coverage/lcov.info | codacy-coverage"
