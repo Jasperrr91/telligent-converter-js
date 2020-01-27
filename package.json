@@ -1,15 +1,15 @@
 {
-  "name": "widgets-js",
+  "name": "telligent-parser",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Parse Telligent Widget/Theme XML exports to/from source files",
+  "main": "src/app.js",
   "scripts": {
     "start": "babel-node src/app.js",
     "test": "jest",
     "test-with-coverage": "jest --coverage && cat ./coverage/lcov.info | codacy-coverage"
   },
   "keywords": [],
-  "author": "",
+  "author": "Jasper van der Stoop (https://github.com/Jasperrr91/)",
   "license": "ISC",
   "repository": {
     "type": "git",
