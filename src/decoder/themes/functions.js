@@ -1,6 +1,6 @@
 import { writeFileSync } from 'fs';
 import { createDirIfNotExists, getExtensionForLanguage, convertJsonToXml } from '../helpers';
-import { widgetDecoder } from '../index';
+import { decodeWidget } from '../widgets';
 /**
  * Create an options file in the output folder of the theme, containing the attributes of the theme
  * @param {Object} themeJson Object containing the JSON of the theme
@@ -161,21 +161,22 @@ export function parsePages(pages, themeDir) {
   });
 }
 
-export function parseContentFragment(data, dir) {
+export function parseWidgets(widgetFragments, dir) {
+  if (widgetFragments === undefined) return;
+
   const widgetsDir = [dir, 'widgets/'].join('');
-  widgetDecoder(data, widgetsDir);
+  const widgets = widgetFragments.scriptedContentFragments.scriptedContentFragment;
+
+  widgets.forEach((widget) => {
+    decodeWidget(widget, widgetsDir);
+  });
 }
 
-export function parseContentFragments(data, dir) {
-  if (data === undefined) return;
-  data.scriptedContentFragment.forEach((fragment) => parseContentFragment(fragment, dir));
-}
-
-export function createPageLayouts(data, themeDir) {
-  createXMLFileFromData('header.xml', data.headers, themeDir);
-  createXMLFileFromData('footer.xml', data.footers, themeDir);
-  parsePages(data.pages, themeDir);
-  parseContentFragments(data.contentFragments.scriptedContentFragments, themeDir);
+export function createPageLayouts(pageLayouts, themeDir) {
+  createXMLFileFromData('header.xml', pageLayouts.headers, themeDir);
+  createXMLFileFromData('footer.xml', pageLayouts.footers, themeDir);
+  parsePages(pageLayouts.pages, themeDir);
+  parseWidgets(pageLayouts.contentFragments, themeDir);
 }
 
 export default {

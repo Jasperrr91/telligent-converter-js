@@ -14,9 +14,10 @@ fs.readdir(inputDir, (err, files) => {
   if (err) throw err;
   files.forEach((filename) => {
     const fileLocation = [inputDir, filename].join('');
-    const widgetXml = helpers.openXmlFile(fileLocation);
-    const widgetJson = helpers.convertXmlToJson(widgetXml);
-    widgetDecoder(widgetJson.scriptedContentFragments.scriptedContentFragment, outputDir);
+    widgetDecoder(fileLocation, outputDir);
+    // const widgetXml = helpers.openXmlFile(fileLocation);
+    // const widgetJson = helpers.convertXmlToJson(widgetXml);
+    // widgetDecoder(widgetJson.scriptedContentFragments.scriptedContentFragment, outputDir);
   });
 });
 
