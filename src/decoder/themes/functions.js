@@ -163,7 +163,7 @@ export function parsePages(pages, themeDir) {
 
 export function parseContentFragment(data, dir) {
   const widgetsDir = [dir, 'widgets/'].join('');
-  widgetDecoder(data, {}, widgetsDir);
+  widgetDecoder(data, widgetsDir);
 }
 
 export function parseContentFragments(data, dir) {

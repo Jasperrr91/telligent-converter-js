@@ -8,12 +8,12 @@ import {
   createWidgetOptionsFile,
 } from './functions';
 
-export default function widgetDecoder(jsonObject, config, dir) {
+export default function widgetDecoder(jsonObject, outputDir) {
   const widgetNameReference = jsonObject.attr.name;
   const widgetName = getValueFromLanguageKey(jsonObject, widgetNameReference);
 
-  const outputFolder = dir || config.outputFolder;
-  const widgetDir = [outputFolder, widgetName, '/'].join('');
+  const widgetDir = [outputDir, widgetName, '/'].join('');
+  console.log(outputDir);
   createDirIfNotExists(widgetDir);
 
   createWidgetOptionsFile(jsonObject, widgetDir);

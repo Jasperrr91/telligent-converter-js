@@ -1,5 +1,4 @@
 import fs from 'fs';
-import config from '../config.json';
 import { helpers } from './decoder/index';
 import { widgetDecoder, themeDecoder, widgetEncoder, themeEncoder } from './index';
 import { createXMLFileFromData } from './decoder/themes/functions';
@@ -8,21 +7,24 @@ import {
 } from './decoder/helpers';
 
 // Decode each widget
-const { inputFolder } = config;
-fs.readdir(inputFolder, (err, files) => {
+const inputDir = './input/';
+const outputDir = './output/';
+
+fs.readdir(inputDir, (err, files) => {
   if (err) throw err;
   files.forEach((file) => {
-    const widgetXml = helpers.openXmlFile(file, config);
+    const widgetXml = helpers.openXmlFile(file, inputDir);
     const widgetJson = helpers.convertXmlToJson(widgetXml);
-    widgetDecoder(widgetJson.scriptedContentFragments.scriptedContentFragment, config);
+    widgetDecoder(widgetJson.scriptedContentFragments.scriptedContentFragment, outputDir);
   });
 });
 
 // Decode Themes XML file
 const themesFile = '../themes.xml';
-const themesXml = helpers.openXmlFile(themesFile, config);
+const themesXml = helpers.openXmlFile(themesFile, inputDir);
 const themesJson = helpers.convertXmlToJson(themesXml);
-themeDecoder(themesJson, config);
+const themeOutputDir = './output/';
+themeDecoder(themesJson, themeOutputDir);
 
 // Encodes themes
 const themesFolder = './output/';

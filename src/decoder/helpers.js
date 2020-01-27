@@ -14,8 +14,8 @@ import {
   json as jsonOptions,
 } from '../ParserOptions';
 
-export function openXmlFile(filename, config) {
-  const fileLocation = [config.inputFolder, filename].join('');
+export function openXmlFile(filename, inputDir) {
+  const fileLocation = [inputDir, filename].join('');
   return readFileSync(fileLocation, 'utf8');
 }
 

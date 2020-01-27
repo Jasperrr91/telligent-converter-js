@@ -16,22 +16,19 @@ import { createDirIfNotExists } from '../helpers';
  * @param {Object} jsonObject Object containing xml of the theme parsed as json
  * @param {Object} config Object containing configuration
  */
-export default function themeDecoder(jsonObject, config) {
+export default function themeDecoder(jsonObject, outputDir) {
   // If we are working with a collection of themes, re-run the function with each theme
   if (jsonObject.themes) {
-    jsonObject.themes.theme.forEach((theme) => themeDecoder(theme, config));
+    jsonObject.themes.theme.forEach((theme) => themeDecoder(theme, outputDir));
     return;
   }
 
-  const { outputFolder } = config;
-
-  // Get the description of the theme and use that as the output folder name
+  // Get the description of the theme and use that as the output dir name
   const themeDescription = jsonObject.attr.description;
-  const themeDir = [outputFolder, themeDescription, '/'].join('');
-
-  // console.log(jsonObject.configuration);
+  const themeDir = [outputDir, themeDescription, '/'].join('');
   createDirIfNotExists(themeDir);
 
+  // Parse the theme and save each individual file
   createThemeOptionsFile(jsonObject, themeDir);
   createScript('headScript', jsonObject, themeDir);
   createScript('bodyScript', jsonObject, themeDir);
