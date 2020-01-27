@@ -2,10 +2,11 @@
   "name": "telligent-parser",
   "version": "1.1.0",
   "description": "Parse Telligent Widget/Theme XML exports to/from source files",
-  "main": "src/app.js",
+  "main": "dist/app.js",
   "scripts": {
     "start": "babel-node src/app.js",
     "build": "babel src -s -d dist",
+    "publish": "npm run-script build && np",
     "clean": "rm -rf ./dist/",
     "test": "jest",
     "test-with-coverage": "jest --coverage && cat ./coverage/lcov.info | codacy-coverage"
