@@ -1,3 +1,9 @@
-export { default as widgetDecoder } from './widgets/index';
-export { default as themeDecoder } from './themes/index';
-export { default as helpers } from './helpers';
+import widgetDecoder from './widgets/index';
+import themeDecoder from './themes/index';
+import helpers from './helpers';
+
+export {
+  widgetDecoder,
+  themeDecoder,
+  helpers,
+};

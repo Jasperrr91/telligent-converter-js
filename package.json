@@ -5,6 +5,8 @@
   "main": "src/app.js",
   "scripts": {
     "start": "babel-node src/app.js",
+    "build": "babel src -s -d dist",
+    "clean": "rm -rf ./dist/",
     "test": "jest",
     "test-with-coverage": "jest --coverage && cat ./coverage/lcov.info | codacy-coverage"
   },
@@ -21,6 +23,7 @@
     "he": "^1.2.0"
   },
   "devDependencies": {
+    "@babel/cli": "^7.7.7",
     "@babel/core": "^7.7.7",
     "@babel/node": "^7.7.7",
     "@babel/preset-env": "^7.7.7",

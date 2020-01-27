@@ -1,7 +1,7 @@
 import fs from 'fs';
 import config from '../config.json';
-import { widgetDecoder, themeDecoder, helpers } from './decoder/index';
-import { widgetEncoder, themeEncoder } from './encoder/index';
+import { helpers } from './decoder/index';
+import { widgetDecoder, themeDecoder, widgetEncoder, themeEncoder } from './index';
 import { createXMLFileFromData } from './decoder/themes/functions';
 import {
   createDirIfNotExists,
