@@ -9,17 +9,21 @@ import {
   createXMLFileFromData,
   createPageLayouts,
 } from './functions';
-import { createDirIfNotExists } from '../helpers';
+import {
+  createDirIfNotExists,
+  openXmlFile,
+  convertXmlToJson,
+} from '../helpers';
 
 /**
  * Decode exported Telligent theme files
  * @param {Object} jsonObject Object containing xml of the theme parsed as json
  * @param {Object} config Object containing configuration
  */
-export default function themeDecoder(jsonObject, outputDir) {
+export function decodeTheme(jsonObject, outputDir) {
   // If we are working with a collection of themes, re-run the function with each theme
   if (jsonObject.themes) {
-    jsonObject.themes.theme.forEach((theme) => themeDecoder(theme, outputDir));
+    jsonObject.themes.theme.forEach((theme) => decodeTheme(theme, outputDir));
     return;
   }
 
@@ -41,4 +45,10 @@ export default function themeDecoder(jsonObject, outputDir) {
   createStyleFiles(jsonObject.styleFiles, themeDir);
   createPageLayouts(jsonObject.pageLayouts, themeDir);
   createXMLFileFromData('scoped-properties.xml', jsonObject.scopedProperties, themeDir);
+}
+
+export default function themeDecoder(themeFile, outputDir) {
+  const themesXml = openXmlFile(themeFile);
+  const themesJson = convertXmlToJson(themesXml);
+  decodeTheme(themesJson, outputDir);
 }

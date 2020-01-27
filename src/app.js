@@ -12,19 +12,18 @@ const outputDir = './output/';
 
 fs.readdir(inputDir, (err, files) => {
   if (err) throw err;
-  files.forEach((file) => {
-    const widgetXml = helpers.openXmlFile(file, inputDir);
+  files.forEach((filename) => {
+    const fileLocation = [inputDir, filename].join('');
+    const widgetXml = helpers.openXmlFile(fileLocation);
     const widgetJson = helpers.convertXmlToJson(widgetXml);
     widgetDecoder(widgetJson.scriptedContentFragments.scriptedContentFragment, outputDir);
   });
 });
 
 // Decode Themes XML file
-const themesFile = '../themes.xml';
-const themesXml = helpers.openXmlFile(themesFile, inputDir);
-const themesJson = helpers.convertXmlToJson(themesXml);
+const themesFile = './themes.xml';
 const themeOutputDir = './output/';
-themeDecoder(themesJson, themeOutputDir);
+themeDecoder(themesFile, themeOutputDir);
 
 // Encodes themes
 const themesFolder = './output/';
