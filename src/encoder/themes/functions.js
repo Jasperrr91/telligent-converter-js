@@ -2,18 +2,25 @@ import fs from 'fs';
 import { convertXmlToJson } from '../../decoder/helpers';
 import { widgetEncoder } from '../index';
 
-export function getThemeOptions(inputFolder) {
-  const themeOptionsFile = [inputFolder, '/theme_options.json'].join('');
+/**
+ * Reads the options/attributes of the theme and returns them as an object
+ * @param {String} themeOptionsFile path to the file containing the theme options
+ */
+export function getThemeOptions(themeOptionsFile) {
   const rawthemeOptions = fs.readFileSync(themeOptionsFile);
   const themeOptions = JSON.parse(rawthemeOptions);
   return themeOptions;
 }
 
+export function wrapCdata(cdata) {
+  return {
+    __cdata: cdata,
+  };
+}
+
 export function getThemeFile(inputFile) {
   const scriptContents = fs.readFileSync(inputFile, 'utf8');
-  return {
-    __cdata: scriptContents,
-  };
+  return wrapCdata(scriptContents);
 }
 
 export function getScript(inputFile) {
@@ -25,8 +32,13 @@ export function getScript(inputFile) {
   return script;
 }
 
+/**
+ * Reads the given XML file and returns it in an object with  __cdata tags
+ * @param {String} inputFile path to the file to be read
+ */
 export function getXMLFile(inputFile) {
   if (!fs.existsSync(inputFile)) return false;
+
   return getThemeFile(inputFile);
 }
 
@@ -85,14 +97,18 @@ export function getEncodedFiles(inputFolder) {
   };
 }
 
-export function getJSFiles(inputFolder) {
-  const scriptsFolder = [inputFolder, '/js/'].join('');
+export function getJSFiles(inputDir) {
+  // Validate that the scripts folder exists
+  const scriptsFolder = [inputDir, '/js/'].join('');
   if (!fs.existsSync(scriptsFolder)) return false;
 
   const files = [];
+
+  // Loop over each file, encode them and add them to the files array
   fs.readdirSync(scriptsFolder).forEach((file) => {
     const fileLocation = [scriptsFolder, file].join('');
-    files.push(getEncodedFile(fileLocation, file));
+    const encodedFile = getEncodedFile(fileLocation, file);
+    files.push(encodedFile);
   });
 
   return {
@@ -124,22 +140,13 @@ export function getStyleFiles(inputFolder) {
   return files;
 }
 
-export function getHeader(inputFolder) {
-  const headerFileLocation = [inputFolder, '/header.xml'].join('');
-  if (!fs.existsSync(headerFileLocation)) return false;
+export function getPageFile(inputDir, filename) {
+  const fileLocation = [inputDir, '/', filename].join('');
+  if (!fs.existsSync(fileLocation)) return false;
 
-  const headerContents = fs.readFileSync(headerFileLocation, 'utf8');
-  const header = convertXmlToJson(headerContents);
-  return header;
-}
-
-export function getFooter(inputFolder) {
-  const footerFileLocation = [inputFolder, '/footer.xml'].join('');
-  if (!fs.existsSync(footerFileLocation)) return false;
-
-  const footerContents = fs.readFileSync(footerFileLocation, 'utf8');
-  const footer = convertXmlToJson(footerContents);
-  return footer;
+  const fileContents = fs.readFileSync(fileLocation, 'utf8');
+  const file = convertXmlToJson(fileContents);
+  return file;
 }
 
 export function getPages(inputFolder) {
@@ -174,21 +181,14 @@ export function getWidgets(inputFolder) {
   };
 }
 
-export function getPageLayouts(inputFolder) {
+export function getPageLayouts(inputDir) {
   const pageLayouts = {};
-  pageLayouts.headers = getHeader(inputFolder);
-  pageLayouts.footers = getFooter(inputFolder);
-  pageLayouts.pages = getPages(inputFolder);
-  pageLayouts.contentFragments = getWidgets(inputFolder);
+  pageLayouts.headers = getPageFile(inputDir, 'header.xml');
+  pageLayouts.footers = getPageFile(inputDir, 'footer.xml');
+  pageLayouts.pages = getPages(inputDir);
+  pageLayouts.contentFragments = getWidgets(inputDir);
   return pageLayouts;
 }
-
-// export function createPageLayouts(data, themeDir) {
-//   createXMLFileFromData('header.xml', data.headers.contentFragmentHeader.regions, themeDir);
-//   createXMLFileFromData('footer.xml', data.footers.contentFragmentFooter.regions, themeDir);
-//   parsePages(data.pages, themeDir);
-//   parseContentFragments(data.contentFragments.scriptedContentFragments, themeDir);
-// }
 
 export default {
   getThemeOptions,

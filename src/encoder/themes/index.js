@@ -10,13 +10,14 @@ import {
   getPageLayouts,
 } from './functions';
 
-export function encodeTheme(themeFolder) {
+export function encodeTheme(themeDir) {
   // Initialize paths to files
-  const headScriptFile = [themeFolder, '/scripts/headScript.vm'].join('');
-  const bodyScriptFile = [themeFolder, '/scripts/bodyScript.vm'].join('');
-  const configurationFile = [themeFolder, '/configuration.xml'].join('');
-  const paletteTypesFile = [themeFolder, '/palette-types.xml'].join('');
-  const languageResourcesFile = [themeFolder, '/language-resources.xml'].join('');
+  const themeOptionsFile = [themeDir, '/theme_options.json'].join('');
+  const headScriptFile = [themeDir, '/scripts/headScript.vm'].join('');
+  const bodyScriptFile = [themeDir, '/scripts/bodyScript.vm'].join('');
+  const configurationFile = [themeDir, '/configuration.xml'].join('');
+  const paletteTypesFile = [themeDir, '/palette-types.xml'].join('');
+  const languageResourcesFile = [themeDir, '/language-resources.xml'].join('');
 
   // Read and encode each element of the theme
   const headScript = getScript(headScriptFile);
@@ -24,14 +25,14 @@ export function encodeTheme(themeFolder) {
   const configuration = getXMLFile(configurationFile);
   const paletteTypes = getXMLFile(paletteTypesFile);
   const languageResources = getXMLFile(languageResourcesFile);
-  const previewImage = getPreviewImage(themeFolder);
-  const files = getEncodedFiles(themeFolder);
-  const javascriptFiles = getJSFiles(themeFolder);
-  const styleFiles = getStyleFiles(themeFolder);
-  const pageLayouts = getPageLayouts(themeFolder);
+  const previewImage = getPreviewImage(themeDir);
+  const files = getEncodedFiles(themeDir);
+  const javascriptFiles = getJSFiles(themeDir);
+  const styleFiles = getStyleFiles(themeDir);
+  const pageLayouts = getPageLayouts(themeDir);
 
   // Read the theme options which contains the attributes for the theme tag
-  const themeOptions = getThemeOptions(themeFolder);
+  const themeOptions = getThemeOptions(themeOptionsFile);
   const theme = {
     attr: themeOptions,
   };
@@ -61,7 +62,7 @@ export function encodeTheme(themeFolder) {
  */
 export default function themeEncoder(themeDir) {
   // Check if folder only contains one theme, then encode and return it
-  const themeOptionsFile = [themeDir, '/theme_options.json'].join('');
+  let themeOptionsFile = [themeDir, '/theme_options.json'].join('');
   if (fs.existsSync(themeOptionsFile)) {
     return encodeTheme(themeDir);
   }
@@ -73,8 +74,8 @@ export default function themeEncoder(themeDir) {
   // Make sure each folder indeed contains a theme, before encoding and adding it to the object
   subDirectories.forEach((subDir) => {
     const pathToSubDir = [themeDir, subDir].join('');
-    const themeOptionsFile2 = [pathToSubDir, '/theme_options.json'].join('');
-    if (fs.existsSync(themeOptionsFile2)) {
+    themeOptionsFile = [pathToSubDir, '/theme_options.json'].join('');
+    if (fs.existsSync(themeOptionsFile)) {
       themes.push(encodeTheme(pathToSubDir));
     }
   });

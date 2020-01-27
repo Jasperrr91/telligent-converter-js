@@ -1,9 +1,11 @@
 import fs from 'fs';
 import {
-  getVelocityScript,
   getXMLFile,
   getAssetFiles,
 } from './functions';
+import {
+  getVelocityScript,
+} from '../helpers';
 
 /**
  * Transforms a directory containing a widget and it's files, into a single XML file
