@@ -1,6 +1,6 @@
 {
   "name": "telligent-parser",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "Parse Telligent Widget/Theme XML exports to/from source files",
   "main": "dist/index.js",
   "scripts": {
