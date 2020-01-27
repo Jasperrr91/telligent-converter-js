@@ -109,3 +109,5 @@ dist
 # Temporarily ignore input and output folders while working on the encoding/decoding scripts
 input
 output
+encoded
+themes.xml
