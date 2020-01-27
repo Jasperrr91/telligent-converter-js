@@ -1,9 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import {
-  readFileSync,
-  existsSync,
-  mkdirSync,
-} from 'fs';
+import fs from 'fs';
 import {
   getTraversalObj,
   convertToJson,
@@ -15,7 +11,7 @@ import {
 } from '../ParserOptions';
 
 export function openXmlFile(fileLocation) {
-  return readFileSync(fileLocation, 'utf8');
+  return fs.readFileSync(fileLocation, 'utf8');
 }
 
 export function convertXmlToJson(data) {
@@ -31,8 +27,8 @@ export function convertJsonToXml(data) {
 
 // TODO: Rewrite to create all dirs passed in
 export function createDirIfNotExists(dir) {
-  if (!existsSync(dir)) {
-    mkdirSync(dir, { recursive: true });
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
   }
 }
 
