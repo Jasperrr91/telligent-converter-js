@@ -13,7 +13,6 @@ export default function widgetDecoder(jsonObject, outputDir) {
   const widgetName = getValueFromLanguageKey(jsonObject, widgetNameReference);
 
   const widgetDir = [outputDir, widgetName, '/'].join('');
-  console.log(outputDir);
   createDirIfNotExists(widgetDir);
 
   createWidgetOptionsFile(jsonObject, widgetDir);
