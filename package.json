@@ -10,6 +10,9 @@
     "test": "jest",
     "test-with-coverage": "jest --coverage && cat ./coverage/lcov.info | codacy-coverage"
   },
+  "files": [
+    "/dist"
+  ],
   "keywords": [],
   "author": "Jasper van der Stoop (https://github.com/Jasperrr91/)",
   "license": "ISC",
