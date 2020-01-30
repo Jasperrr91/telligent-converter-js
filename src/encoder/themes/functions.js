@@ -48,15 +48,15 @@ export function readPreviewImage(inputFile) {
   return encodedImage;
 }
 
-export function getPreviewImage(inputFolder) {
+export function getPreviewImage(themeDir) {
   let image;
   let imageFile;
-  fs.readdirSync(inputFolder).forEach((file) => {
-    const fileLocation = [inputFolder, '/', file].join('');
+  fs.readdirSync(themeDir).forEach((file) => {
+    const fileLocation = [themeDir, '/', file].join('');
     if (fs.lstatSync(fileLocation).isFile()) {
       const [, extension] = file.split('.');
       if (extension === 'png') {
-        const imageFileLoc = [inputFolder, '/', file].join('');
+        const imageFileLoc = [themeDir, '/', file].join('');
         image = readPreviewImage(imageFileLoc);
         imageFile = file;
       }
@@ -82,31 +82,36 @@ export function getEncodedFile(inputFile, filename) {
   };
 }
 
-export function getEncodedFiles(inputFolder) {
-  const assetsFolder = [inputFolder, '/assets/'].join('');
-  if (!fs.existsSync(assetsFolder)) return false;
+/**
+ * Reads all assets in given directory and return them as an object
+ * @param {String} assetsDir The dir containing the assets
+ */
+export function getAssets(assetsDir) {
+  if (!fs.existsSync(assetsDir)) return false;
 
-  const files = [];
-  fs.readdirSync(assetsFolder).forEach((file) => {
-    const fileLocation = [assetsFolder, file].join('');
-    files.push(getEncodedFile(fileLocation, file));
+  const assets = [];
+  fs.readdirSync(assetsDir).forEach((file) => {
+    const fileLocation = [assetsDir, file].join('');
+    assets.push(getEncodedFile(fileLocation, file));
   });
 
   return {
-    file: files,
+    file: assets,
   };
 }
 
-export function getJSFiles(inputDir) {
-  // Validate that the scripts folder exists
-  const scriptsFolder = [inputDir, '/js/'].join('');
-  if (!fs.existsSync(scriptsFolder)) return false;
+/**
+ * Reads all js files in given directory and return them as an object
+ * @param {String} scriptsDir The dir containing the js files
+ */
+export function getJSFiles(scriptsDir) {
+  if (!fs.existsSync(scriptsDir)) return false;
 
   const files = [];
 
   // Loop over each file, encode them and add them to the files array
-  fs.readdirSync(scriptsFolder).forEach((file) => {
-    const fileLocation = [scriptsFolder, file].join('');
+  fs.readdirSync(scriptsDir).forEach((file) => {
+    const fileLocation = [scriptsDir, file].join('');
     const encodedFile = getEncodedFile(fileLocation, file);
     files.push(encodedFile);
   });
@@ -122,22 +127,26 @@ export function getStyleFileAttributes(styleFileLocation) {
   return JSON.parse(rawAttributes);
 }
 
-export function getStyleFiles(inputFolder) {
-  const stylesFolder = [inputFolder, '/styles/'].join('');
-  if (!fs.existsSync(stylesFolder)) return false;
+/**
+ * Reads all style files in given directory and return them as an object
+ * @param {String} stylesDir The dir containing the style files
+ */
+export function getStyleFiles(stylesDir) {
+  if (!fs.existsSync(stylesDir)) return false;
 
-  const files = [];
-  fs.readdirSync(stylesFolder).forEach((file) => {
+  const styles = [];
+  fs.readdirSync(stylesDir).forEach((file) => {
     const extension = file.split('.').pop();
     if (extension !== 'json') {
-      const fileLocation = [stylesFolder, file].join('');
+      // Encode each file and add it to the styles array
+      const fileLocation = [stylesDir, file].join('');
       const fileObject = getEncodedFile(fileLocation, file);
       fileObject.attr = getStyleFileAttributes(fileLocation);
-      files.push(fileObject);
+      styles.push(fileObject);
     }
   });
 
-  return files;
+  return styles;
 }
 
 export function getPageFile(inputDir, filename) {
@@ -149,13 +158,16 @@ export function getPageFile(inputDir, filename) {
   return file;
 }
 
-export function getPages(inputFolder) {
-  const pagesFolder = [inputFolder, '/pages/'].join('');
-  if (!fs.existsSync(pagesFolder)) return false;
+/**
+ * Reads all page files in given directory and return them as an object
+ * @param {String} pagesDir The dir containing the page files
+ */
+export function getPages(pagesDir) {
+  if (!fs.existsSync(pagesDir)) return false;
 
   const pages = [];
-  fs.readdirSync(pagesFolder).forEach((page) => {
-    const pageLocation = [pagesFolder, page].join('');
+  fs.readdirSync(pagesDir).forEach((page) => {
+    const pageLocation = [pagesDir, page].join('');
     const pageContents = fs.readFileSync(pageLocation, 'utf8');
     const pageJson = convertXmlToJson(pageContents);
     pages.push(pageJson.contentFragmentPage);
@@ -166,14 +178,14 @@ export function getPages(inputFolder) {
   };
 }
 
-export function getWidgets(inputFolder) {
-  const widgetsFolder = [inputFolder, '/widgets/'].join('');
-  if (!fs.existsSync(widgetsFolder)) return false;
+export function getWidgets(themeDir) {
+  const widgetsDir = [themeDir, '/widgets/'].join('');
+  if (!fs.existsSync(widgetsDir)) return false;
 
   const widgets = [];
-  fs.readdirSync(widgetsFolder).forEach((widget) => {
-    const widgetFolder = [widgetsFolder, widget].join('');
-    widgets.push(widgetEncoder(widgetFolder));
+  fs.readdirSync(widgetsDir).forEach((widget) => {
+    const widgetsDir = [widgetsDir, widget].join('');
+    widgets.push(widgetEncoder(widgetsDir));
   });
 
   return {
@@ -195,7 +207,7 @@ export default {
   getScript,
   getXMLFile,
   getPreviewImage,
-  getEncodedFiles,
+  getAssets,
   getJSFiles,
   getStyleFiles,
   getPageLayouts,

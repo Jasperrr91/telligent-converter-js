@@ -4,7 +4,7 @@ import {
   getScript,
   getXMLFile,
   getPreviewImage,
-  getEncodedFiles,
+  getAssets,
   getJSFiles,
   getStyleFiles,
   getPageLayouts,
@@ -18,6 +18,11 @@ export function encodeTheme(themeDir) {
   const configurationFile = [themeDir, '/configuration.xml'].join('');
   const paletteTypesFile = [themeDir, '/palette-types.xml'].join('');
   const languageResourcesFile = [themeDir, '/language-resources.xml'].join('');
+  const assetsDir = [themeDir, '/assets/'].join('');
+  const jsDir = [themeDir, '/js/'].join('');
+  const stylesDir = [themeDir, '/styles/'].join('');
+  const pagesDir = [themeDir, '/pages/'].join('');
+
 
   // Read and encode each element of the theme
   const headScript = getScript(headScriptFile);
@@ -26,10 +31,10 @@ export function encodeTheme(themeDir) {
   const paletteTypes = getXMLFile(paletteTypesFile);
   const languageResources = getXMLFile(languageResourcesFile);
   const previewImage = getPreviewImage(themeDir);
-  const files = getEncodedFiles(themeDir);
-  const javascriptFiles = getJSFiles(themeDir);
-  const styleFiles = getStyleFiles(themeDir);
-  const pageLayouts = getPageLayouts(themeDir);
+  const files = getAssets(assetsDir);
+  const javascriptFiles = getJSFiles(jsDir);
+  const styleFiles = getStyleFiles(stylesDir);
+  const pageLayouts = getPageLayouts(pagesDir);
 
   // Read the theme options which contains the attributes for the theme tag
   const themeOptions = getThemeOptions(themeOptionsFile);
@@ -50,9 +55,7 @@ export function encodeTheme(themeDir) {
   if (pageLayouts) theme.pageLayouts = pageLayouts;
   if (headScript) theme.headScript = headScript;
 
-  return {
-    theme,
-  };
+  return theme;
 }
 
 /**
@@ -81,6 +84,8 @@ export default function themeEncoder(themeDir) {
   });
 
   return {
-    themes,
+    themes: {
+      theme: themes,
+    },
   };
 }

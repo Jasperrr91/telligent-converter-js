@@ -9,7 +9,8 @@
     "release": "npm run-script build && np",
     "clean": "rm -rf ./dist/",
     "test": "jest",
-    "test-with-coverage": "jest --coverage && cat ./coverage/lcov.info | codacy-coverage"
+    "test-with-coverage": "jest --coverage && cat ./coverage/lcov.info | codacy-coverage",
+    "test-coverage": "jest --coverage"
   },
   "files": [
     "/dist"

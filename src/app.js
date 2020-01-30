@@ -1,5 +1,4 @@
 import fs from 'fs';
-import { helpers } from './decoder/index';
 import { widgetDecoder, themeDecoder, widgetEncoder, themeEncoder } from './index';
 import { createXMLFileFromData } from './decoder/themes/functions';
 import {
@@ -15,9 +14,6 @@ fs.readdir(inputDir, (err, files) => {
   files.forEach((filename) => {
     const fileLocation = [inputDir, filename].join('');
     widgetDecoder(fileLocation, outputDir);
-    // const widgetXml = helpers.openXmlFile(fileLocation);
-    // const widgetJson = helpers.convertXmlToJson(widgetXml);
-    // widgetDecoder(widgetJson.scriptedContentFragments.scriptedContentFragment, outputDir);
   });
 });
 
@@ -32,6 +28,8 @@ const themes = themeEncoder(themesFolder);
 createDirIfNotExists('./encoded');
 createXMLFileFromData('theme.xml', themes, './encoded/');
 
+
+// Encode Widgets
 const folderWithWidgets = './output/';
 fs.readdir(folderWithWidgets, (err, folders) => {
   if (err) throw err;

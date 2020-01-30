@@ -2,9 +2,9 @@ import { writeFileSync } from 'fs';
 import { createDirIfNotExists, getExtensionForLanguage, convertJsonToXml } from '../helpers';
 import { decodeWidget } from '../widgets';
 /**
- * Create an options file in the output folder of the theme, containing the attributes of the theme
+ * Create an options file in the output dir of the theme, containing the attributes of the theme
  * @param {Object} themeJson Object containing the JSON of the theme
- * @param {String} themeDir Output folder
+ * @param {String} themeDir Output dir
  */
 export function createThemeOptionsFile(themeJson, themeDir) {
   const outputFile = [themeDir, '/theme_options.json'].join('');
@@ -14,10 +14,10 @@ export function createThemeOptionsFile(themeJson, themeDir) {
 }
 
 /**
- * For the given script, create and save it in the scripts subdir in the theme folder
+ * For the given script, create and save it in the scripts subdir in the theme dir
  * @param {String} name Name of the script that needs to be saved
  * @param {Object} json Object that contains the parent with all scripts
- * @param {String} themeDir Output folder
+ * @param {String} themeDir Output dir
  */
 export function createScript(name, json, themeDir) {
   const scriptsDir = [themeDir, '/scripts/'].join('');
@@ -34,7 +34,7 @@ export function createScript(name, json, themeDir) {
  * For a given object, take the __cdata key and store it in a given file
  * @param {String} filename Name of the file to be created
  * @param {Object} data Object that contains the file data
- * @param {String} themeDir Output folder
+ * @param {String} themeDir Output dir
  */
 export function createFileFromCData(filename, data, themeDir) {
   if (data === undefined) return;
@@ -53,7 +53,7 @@ export function createXMLFileFromData(filename, data, outputDir) {
 /**
  * Takes an object containing a base64 encoded image and stores it
  * @param {Object} data Object containing the encoded image and it's name
- * @param {String} themeDir Output folder
+ * @param {String} themeDir Output dir
  */
 export function createPreviewImage(data, themeDir) {
   if (data === undefined) return;
@@ -72,9 +72,9 @@ export function b64Decode(data) {
 }
 
 /**
- * Takes a single styleFile object and stores it in the styles folder
+ * Takes a single styleFile object and stores it in the styles dir
  * @param {Object} styleFile Object of the stylefile containing the name and contents
- * @param {String} styleDir Output folder
+ * @param {String} styleDir Output dir
  */
 export function createStyleFile(styleFile, styleDir) {
   const filename = styleFile.attr.name;
@@ -88,21 +88,21 @@ export function createStyleFile(styleFile, styleDir) {
 }
 
 /**
- * Creates a folder for the theme's stylefiles and maps over these files a function to create them
+ * Creates a dir for the theme's stylefiles and maps over these files a function to create them
  * @param {Object} styleFiles Object containing the stylefiles for the theme
- * @param {String} themeDir Output folder
+ * @param {String} themeDir Output dir
  */
 export function createStyleFiles(styleFiles, themeDir) {
   if (styleFiles === undefined) return;
-  const styleFolder = [themeDir, 'styles/'].join('');
-  createDirIfNotExists(styleFolder);
-  styleFiles.file.forEach((file) => createStyleFile(file, styleFolder));
+  const stylesDir = [themeDir, 'styles/'].join('');
+  createDirIfNotExists(stylesDir);
+  styleFiles.file.forEach((file) => createStyleFile(file, stylesDir));
 }
 
 /**
- * Takes a single javascript file object and stores it in the js folder
+ * Takes a single javascript file object and stores it in the js dir
  * @param {Object} styleFile Object of the stylefile containing the name and contents
- * @param {String} styleDir Output folder
+ * @param {String} styleDir Output dir
  */
 export function createJSFile(jsFile, jsDir) {
   const filename = jsFile.attr.name;
@@ -112,21 +112,22 @@ export function createJSFile(jsFile, jsDir) {
 }
 
 /**
- * Creates a folder for the theme's javascript files and maps over these files a function to create them
+ * Creates a dir for the theme's javascript files and maps over these files a function to create them
  * @param {Object} styleFiles Object containing the stylefiles for the theme
- * @param {String} themeDir Output folder
+ * @param {String} themeDir Output dir
  */
 export function createJSFiles(javascriptFiles, themeDir) {
   if (javascriptFiles === undefined) return;
-  const jsFolder = [themeDir, 'js/'].join('');
-  createDirIfNotExists(jsFolder);
-  javascriptFiles.file.forEach((file) => createJSFile(file, jsFolder));
+
+  const jsDir = [themeDir, 'js/'].join('');
+  createDirIfNotExists(jsDir);
+  javascriptFiles.file.forEach((file) => createJSFile(file, jsDir));
 }
 
 /**
- * Takes a single javascript file object and stores it in the js folder
+ * Takes a single javascript file object and stores it in the js dir
  * @param {Object} styleFile Object of the stylefile containing the name and contents
- * @param {String} styleDir Output folder
+ * @param {String} styleDir Output dir
  */
 export function createAssetFile(file, assetDir) {
   const filename = file.attr.name;
@@ -136,15 +137,15 @@ export function createAssetFile(file, assetDir) {
 }
 
 /**
- * Creates a folder for the theme's javascript files and maps a unction to create the files
+ * Creates a dir for the theme's javascript files and maps a unction to create the files
  * @param {Object} styleFiles Object containing the stylefiles for the theme
- * @param {String} themeDir Output folder
+ * @param {String} themeDir Output dir
  */
-export function createAssetFiles(files, themeDir) {
-  if (files === undefined) return;
-  const assetFolder = [themeDir, 'assets/'].join('');
-  createDirIfNotExists(assetFolder);
-  files.file.forEach((file) => createAssetFile(file, assetFolder));
+export function createAssetFiles(assetFiles, themeDir) {
+  if (assetFiles === undefined) return;
+  const assetsDir = [themeDir, 'assets/'].join('');
+  createDirIfNotExists(assetsDir);
+  assetFiles.file.forEach((file) => createAssetFile(file, assetsDir));
 }
 
 export function parsePages(pages, themeDir) {
