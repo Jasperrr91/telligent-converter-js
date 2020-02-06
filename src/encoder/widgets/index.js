@@ -2,6 +2,7 @@ import fs from 'fs';
 import {
   getXMLFile,
   getAssetFiles,
+  getRequiredContext,
 } from './functions';
 import {
   getVelocityScript,
@@ -22,6 +23,7 @@ export default function widgetEncoder(widgetDir) {
   const configurationFile = [widgetDir, '/configuration.xml'].join('');
   const languageResourcesFile = [widgetDir, '/languageResources.xml'].join('');
   const additionalCssScriptFile = [widgetDir, '/additionalCssScript.css'].join('');
+  const requiredContextFile = [widgetDir, '/requiredContext.xml'].join('');
 
   // Read and encode each element of the widget
   const contentScript = getVelocityScript(contentScriptFile);
@@ -29,6 +31,7 @@ export default function widgetEncoder(widgetDir) {
   const configuration = getXMLFile(configurationFile);
   const languageResources = getXMLFile(languageResourcesFile);
   const additionalCssScript = getVelocityScript(additionalCssScriptFile);
+  const requiredContext = getRequiredContext(requiredContextFile);
   const files = getAssetFiles(widgetDir);
 
   // Read the widget options which contains the attributes for the widget tag
@@ -44,6 +47,7 @@ export default function widgetEncoder(widgetDir) {
   if (configuration) scriptedContentFragment.configuration = configuration;
   if (languageResources) scriptedContentFragment.languageResources = languageResources;
   scriptedContentFragment.additionalCssScript = additionalCssScript;
+  if (requiredContext) scriptedContentFragment.requiredContext = requiredContext;
   scriptedContentFragment.files = files;
 
   return {

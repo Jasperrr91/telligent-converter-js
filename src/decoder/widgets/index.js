@@ -8,6 +8,7 @@ import {
   decodeFiles,
   getValueFromLanguageKey,
   createWidgetOptionsFile,
+  decodeRequiredContext,
 } from './functions';
 
 export function decodeWidget(jsonObject, outputDir) {
@@ -25,6 +26,7 @@ export function decodeWidget(jsonObject, outputDir) {
   if (jsonObject.files !== undefined) {
     decodeFiles(jsonObject, widgetDir);
   }
+  decodeRequiredContext(jsonObject, widgetDir);
 }
 
 export default function widgetDecoder(themeFileLocation, outputDir) {

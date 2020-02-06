@@ -42,6 +42,16 @@ export function getXMLFile(inputFile) {
   return getThemeFile(inputFile);
 }
 
+/**
+ * Reads the given XML file and returns it in an object without tags
+ * @param {String} inputFile path to the file to be read
+ */
+export function getFile(inputFile) {
+  if (!fs.existsSync(inputFile)) return false;
+
+  return fs.readFileSync(inputFile, 'utf8');
+}
+
 export function readPreviewImage(inputFile) {
   const image = fs.readFileSync(inputFile);
   const encodedImage = image.toString('base64');
@@ -146,7 +156,9 @@ export function getStyleFiles(stylesDir) {
     }
   });
 
-  return styles;
+  return {
+    file: styles,
+  };
 }
 
 export function getPageFile(inputDir, filename) {
@@ -184,21 +196,26 @@ export function getWidgets(themeDir) {
 
   const widgets = [];
   fs.readdirSync(widgetsDir).forEach((widget) => {
-    const widgetsDir = [widgetsDir, widget].join('');
-    widgets.push(widgetEncoder(widgetsDir));
+    const widgetDir = [widgetsDir, widget].join('');
+    const encodedWidget = widgetEncoder(widgetDir);
+    if (encodedWidget !== undefined) {
+      widgets.push(encodedWidget.scriptedContentFragments.scriptedContentFragment);
+    }
   });
-
-  return {
-    contentFragment: widgets,
-  };
+  // console.log(widgets[0]);
+  return widgets;
 }
 
-export function getPageLayouts(inputDir) {
+export function getPageLayouts(inputDir, pagesDir) {
   const pageLayouts = {};
-  pageLayouts.headers = getPageFile(inputDir, 'header.xml');
-  pageLayouts.footers = getPageFile(inputDir, 'footer.xml');
-  pageLayouts.pages = getPages(inputDir);
-  pageLayouts.contentFragments = getWidgets(inputDir);
+  pageLayouts.headers = getPageFile(inputDir, '/header.xml');
+  pageLayouts.footers = getPageFile(inputDir, '/footer.xml');
+  pageLayouts.pages = getPages(pagesDir);
+  pageLayouts.contentFragments = {
+    scriptedContentFragments: {
+      scriptedContentFragment: getWidgets(inputDir),
+    },
+  };
   return pageLayouts;
 }
 
@@ -206,6 +223,7 @@ export default {
   getThemeOptions,
   getScript,
   getXMLFile,
+  getFile,
   getPreviewImage,
   getAssets,
   getJSFiles,

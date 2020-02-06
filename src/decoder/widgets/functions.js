@@ -2,7 +2,7 @@
 import {
   writeFileSync,
 } from 'fs';
-import { convertXmlToJson } from '../helpers';
+import { convertXmlToJson, convertJsonToXml } from '../helpers';
 
 export function createWidgetOptionsFile(widgetJson, widgetDir) {
   const outputFile = [widgetDir, '/widget_options.json'].join('');
@@ -20,17 +20,31 @@ export function writeScriptToFile(xml, fileName, outputDir) {
   writeFileSync(outputFile, fileContents);
 }
 
+export function getFileExtension(filename) {
+  return filename.split('.')[1];
+}
+
 export function writeFileToFile(file, outputDir) {
   const encodedContents = file['#text'];
-  const decodedContents = Buffer.from(encodedContents, 'base64').toString();
   const fileName = file.attr.name;
   const outputFile = [outputDir, fileName].join('');
+  let fileContents;
 
-  writeFileSync(outputFile, decodedContents);
+  // mp3 and wave files are not base64 encoded
+  if (getFileExtension(fileName) === 'mp3' || getFileExtension(fileName) === 'wav') {
+    fileContents = encodedContents;
+  } else {
+    fileContents = Buffer.from(encodedContents, 'base64').toString();
+  }
+
+  writeFileSync(outputFile, fileContents);
 }
 
 export function decodeScript(xml, scriptFile, dir) {
   const scriptName = scriptFile.split('.')[0];
+  if (scriptName === 'contentScript') {
+    // console.log(xml.contentScript);
+  }
   const contents = xml[scriptName];
   if (contents === undefined) return;
   if (contents.__cdata !== undefined) writeScriptToFile(contents, scriptFile, dir);
@@ -43,11 +57,24 @@ export function decodeScripts(data, widgetDir) {
     'configuration.xml',
     'languageResources.xml',
     'additionalCssScript.css',
+    'requiredContext.xml',
   ];
 
   widgetScripts.forEach((widgetScript) => {
     decodeScript(data, widgetScript, widgetDir);
   });
+}
+
+export function createXMLFileFromData(filename, data, outputDir) {
+  if (data === undefined) return;
+  const fileLocation = [outputDir, filename].join('');
+  const xml = convertJsonToXml(data);
+  writeFileSync(fileLocation, xml);
+}
+
+export function decodeRequiredContext(xml, dir) {
+  const context = xml.requiredContext;
+  if (context !== undefined) createXMLFileFromData('requiredContext.xml', context, dir);
 }
 
 export function decodeFiles(data, widgetDir) {
@@ -84,4 +111,5 @@ export default {
   decodeScript,
   decodeScripts,
   decodeFiles,
+  decodeRequiredContext,
 };

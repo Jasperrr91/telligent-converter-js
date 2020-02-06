@@ -17,16 +17,16 @@ fs.readdir(inputDir, (err, files) => {
   });
 });
 
-// Decode Themes XML file
-const themesFile = './themes.xml';
-const themeOutputDir = './output/';
-themeDecoder(themesFile, themeOutputDir);
+// // Decode Themes XML file
+// const themesFile = './themes.xml';
+// const themeOutputDir = './output/';
+// themeDecoder(themesFile, themeOutputDir);
 
-// Encodes themes
-const themesFolder = './output/';
-const themes = themeEncoder(themesFolder);
-createDirIfNotExists('./encoded');
-createXMLFileFromData('theme.xml', themes, './encoded/');
+// // Encodes themes
+// const themesFolder = './output/';
+// const themes = themeEncoder(themesFolder);
+// createDirIfNotExists('./encoded');
+// createXMLFileFromData('theme.xml', themes, './encoded/');
 
 
 // Encode Widgets

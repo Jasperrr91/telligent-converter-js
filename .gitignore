@@ -111,3 +111,7 @@ input
 output
 encoded
 themes.xml
+decoded-themes
+dist-themes
+# This testfile needs a rewrite with mock data
+src/index.spec.js

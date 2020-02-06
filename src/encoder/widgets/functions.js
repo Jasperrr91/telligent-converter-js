@@ -1,4 +1,5 @@
 import fs from 'fs';
+import { convertXmlToJson } from '../../decoder/helpers';
 
 /**
  * Reads XML from a file and then returns it as an object with the appropriate tags.
@@ -14,6 +15,11 @@ export function getXMLFile(fileLocation) {
   };
 }
 
+export function getFileExtension(filename) {
+  return filename.split('.')[1];
+}
+
+
 /**
  * Reads a file and then applies base64 encoding to it's contents. It then gets
  * returned as an object with the appropriate tags added.
@@ -21,8 +27,15 @@ export function getXMLFile(fileLocation) {
  * @param {String} fileName name and extension of the file
  */
 export function getEncodedFile(fileLocation, fileName) {
-  const fileContents = fs.readFileSync(fileLocation);
-  const encodedFileContents = fileContents.toString('base64');
+  const fileContents = fs.readFileSync(fileLocation, 'utf8');
+  let encodedFileContents;
+
+  // mp3 and wave files are not base64 encoded
+  if (getFileExtension(fileName) === 'mp3' || getFileExtension(fileName) === 'wav') {
+    encodedFileContents = fileContents;
+  } else {
+    encodedFileContents = Buffer.from(fileContents).toString('base64');
+  }
 
   return {
     attr: {
@@ -45,6 +58,7 @@ export function getAssetFiles(widgetDir) {
     'languageResources.xml',
     'additionalCssScript.css',
     'widget_options.json',
+    'requiredContext.xml',
   ];
   const files = [];
 
@@ -63,7 +77,15 @@ export function getAssetFiles(widgetDir) {
   };
 }
 
+export function getRequiredContext(fileLocation) {
+  if (!fs.existsSync(fileLocation)) return false;
+
+  const fileContents = fs.readFileSync(fileLocation, 'utf8');
+  return convertXmlToJson(fileContents);
+}
+
 export default {
   getXMLFile,
   getAssetFiles,
+  getRequiredContext,
 };
