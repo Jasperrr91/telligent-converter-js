@@ -30,8 +30,8 @@ export const json = {
   format: true,
   indentBy: '\t',
   supressEmptyNode: true,
-  // tagValueProcessor: (a) => he.encode(a, { useNamedReferences: true }), // default is a=>a
-  // attrValueProcessor: (a) => he.encode(a, {
-    // isAttributeValue: true, useNamedReferences: true,
-  // }), // default is a=>a
+  tagValueProcessor: (a) => he.encode(a, { useNamedReferences: true }), // default is a=>a
+  attrValueProcessor: (a) => he.encode(a, {
+    isAttributeValue: true, useNamedReferences: true,
+  }), // default is a=>a
 };
