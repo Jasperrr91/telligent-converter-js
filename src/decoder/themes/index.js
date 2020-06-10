@@ -27,6 +27,11 @@ export function decodeTheme(jsonObject, outputDir) {
     return;
   }
 
+  if (jsonObject.theme) {
+    decodeTheme(jsonObject.theme, outputDir);
+    return;
+  }
+
   // Get the description of the theme and use that as the output dir name
   const themeDescription = jsonObject.attr.description;
   const themeDir = [outputDir, themeDescription, '/'].join('');
