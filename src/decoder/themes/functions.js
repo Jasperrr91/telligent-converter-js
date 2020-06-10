@@ -96,7 +96,12 @@ export function createStyleFiles(styleFiles, themeDir) {
   if (styleFiles === undefined) return;
   const stylesDir = [themeDir, 'styles/'].join('');
   createDirIfNotExists(stylesDir);
-  styleFiles.file.forEach((file) => createStyleFile(file, stylesDir));
+  // console.log(styleFiles.file);
+  if (Array.isArray(styleFiles.file)) {
+    styleFiles.file.forEach((file) => createStyleFile(file, stylesDir));
+  } else {
+    createStyleFile(styleFiles.file, stylesDir);
+  }
 }
 
 /**

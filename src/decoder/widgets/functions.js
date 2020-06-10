@@ -97,10 +97,16 @@ export function getValueFromLanguageKey(jsonObject, key) {
   const resourceList = languageResources.language.resource;
 
   const re = /^\$\{resource:(.*)\}$/;
-  const keyName = re.exec(key)[1];
+  let result;
+  try {
+    // eslint-disable-next-line prefer-destructuring
+    const keyName = re.exec(key)[1];
+    const matchingResource = resourceList.filter((resource) => resource.attr.name === keyName);
+    result = matchingResource[0]['#text'];
+  } catch (err) {
+    result = key;
+  }
 
-  const matchingResource = resourceList.filter((resource) => resource.attr.name === keyName);
-  const result = matchingResource[0]['#text'];
   return replaceSlashWithOR(result);
 }
 
